@@ -1,39 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/contexts/AuthContext';
+import bgImage from '@/images/bg.png';
 import { useNavigate } from 'react-router-dom';
+import redCrossIcon from '@/images/logo.svg';
 
 export default function LoginPage() {
-  // Состояния для email, password и ошибки
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth()
-  const navigate = useNavigate()
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  // Обработчик отправки формы
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(''); // Сброс ошибки
+    setError('');
     setLoading(true);
 
     try {
-      // Отправка запроса с axios
       const response = await axios.post('/api/login', {
         email,
         password,
       });
 
-      // Получаем токен из ответа
       const { access_token, token_type } = response.data;
 
-      // Сохраняем токен в localStorage
       localStorage.setItem('token', access_token);
       localStorage.setItem('token_type', token_type);
-      login(access_token)
+      login(access_token);
       alert('Успешный вход!');
-      navigate("/")
+      navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка при входе. Проверьте данные.');
     } finally {
@@ -42,54 +39,119 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Вход</h2>
+    <div
+  className="h-screen w-screen flex items-center justify-center bg-no-repeat bg-center bg-contain px-4"
+  style={{
+    backgroundImage: `url(${bgImage})`
+  }}
+>
 
-        <form onSubmit={handleSubmit}>
+      {/* Логотип */}  
+
+      <div className="absolute top-0 left-0 transform -translate-y-[220px]">
+  <img 
+    src={redCrossIcon} 
+    alt="DocAssistant" 
+    className="w-[550px] h-[550px]"
+  />
+</div>
+
+
+      {/* Форма входа */}
+      <div className="bg-[#61A4FA] bg-opacity-80 p-20  rounded-3xl shadow-lg w-full max-w-xl pb-10" >
+
+        <form onSubmit={handleSubmit} className="space-y-10 -translate-y-[10%]">
           {/* Поле Email */}
           <div className="mb-4">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium">
-              Email
+            <label htmlFor="email" className="block mb-2 text-xl font-medium text-white">
+              Eмейл:
             </label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Введите email"
+              className="w-full py-3 px-3 border ring-2 ring-blue-500 rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+
+              placeholder=" "
               required
             />
           </div>
 
           {/* Поле Password */}
-          <div className="mb-6">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium">
-              Пароль
+          <div className="mb-4">
+            <label htmlFor="password" className="block mb-2 text-xl font-medium text-white">
+              Пароль:
             </label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Введите пароль"
+              className="w-full py-3 px-3 border ring-2 ring-blue-500 rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder=" "
               required
             />
           </div>
 
+          {/* Чекбокс + Ссылка */}
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between text-xl mb-4">
+
+          {/* Чекбокс */}
+{/* Чекбокс */}
+<div className="flex items-center justify-center w-full sm:w-auto mb-5 sm:mb-0">
+  <input
+    type="checkbox"
+    id="remember"
+    className="hidden peer"
+  />
+
+  {/* Кастомный крестик-чекбокс */}
+  <label
+    htmlFor="remember"
+    className="w-6 h-6 border-2 border-blue-500 rounded-md bg-white flex items-center justify-center cursor-pointer peer-checked:bg-white"
+  >
+    {/* Красный крестик */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="hidden peer-checked:block w-5 h-5 text-red-500"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth="3"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </label>
+
+  {/* Текст "Сохранить" */}
+  <span className="ml-2 text-white text-xl">Сохранить</span>
+</div>
+
+
+
+          {/* Ссылка */}
+          <a
+            href="#"
+            className="text-white text-xl hover:text-white active:text-white focus:outline-none hover:underline text-center w-full sm:w-auto"
+          >
+            Забыли пароль?
+          </a>
+          </div>
+
+
           {/* Ошибка */}
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-500 text-sm mb-4 text-xl">{error}</p>}
 
           {/* Кнопка */}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+            className="w-full bg-black py-3 px-3 text-white rounded-full hover:bg-gray-800 transition transform translate-y-[40%]"
             disabled={loading}
           >
-            {loading ? 'Вход...' : 'Войти'}
+            {loading ? 'Вход...' : 'ВОЙТИ'}
           </button>
+
         </form>
       </div>
     </div>
