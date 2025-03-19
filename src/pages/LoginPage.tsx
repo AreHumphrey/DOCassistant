@@ -40,12 +40,11 @@ export default function LoginPage() {
 
   return (
     <div
-  className="h-screen w-screen flex items-center justify-center bg-no-repeat bg-center bg-contain px-4"
-  style={{
-    backgroundImage: `url(${bgImage})`
-  }}
->
-
+      className="h-screen w-screen flex items-center justify-center bg-cover bg-center px-4"
+      style={{
+        backgroundImage: `url(${bgImage})`
+      }}
+    >
       {/* Логотип */}  
 
       <div className="absolute top-0 left-0 transform -translate-y-[220px]">
@@ -98,37 +97,24 @@ export default function LoginPage() {
           <div className="flex flex-col sm:flex-row items-center sm:justify-between text-xl mb-4">
 
           {/* Чекбокс */}
-{/* Чекбокс */}
-<div className="flex items-center justify-center w-full sm:w-auto mb-5 sm:mb-0">
-  <input
-    type="checkbox"
-    id="remember"
-    className="hidden peer"
-  />
+          <div className="flex items-center justify-center w-full sm:w-auto mb-5 sm:mb-0">
+            <input
+              type="checkbox"
+              id="remember"
+              className="hidden peer"
+            />
 
-  {/* Кастомный крестик-чекбокс */}
-  <label
-    htmlFor="remember"
-    className="w-6 h-6 border-2 border-blue-500 rounded-md bg-white flex items-center justify-center cursor-pointer peer-checked:bg-white"
-  >
-    {/* Красный крестик */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="hidden peer-checked:block w-5 h-5 text-red-500"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth="3"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </label>
+            {/* Кастомный крестик-чекбокс */}
+            <label
+              htmlFor="remember"
+              className="w-6 h-6 border-2 border-blue-500 rounded-md bg-white flex items-center justify-center cursor-pointer peer-checked:bg-red-500"
+            >
+              <span className="text-white text-lg font-bold select-none">+</span>
+            </label>
 
-  {/* Текст "Сохранить" */}
-  <span className="ml-2 text-white text-xl">Сохранить</span>
-</div>
-
-
+            {/* Текст "Сохранить" */}
+            <span className="ml-2 text-white text-xl">Сохранить</span>
+          </div>
 
           {/* Ссылка */}
           <a
