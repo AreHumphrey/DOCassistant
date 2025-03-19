@@ -70,7 +70,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full py-3 px-3 border ring-2 ring-blue-500 rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full py-3 px-3 border ring-2 ring-[#0A57FF] rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
 
               placeholder=" "
               required
@@ -87,7 +87,7 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full py-3 px-3 border ring-2 ring-blue-500 rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full py-3 px-3 border ring-2 ring-[#0A57FF] rounded-full text-left focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder=" "
               required
             />
@@ -132,7 +132,7 @@ export default function LoginPage() {
           {/* Кнопка */}
           <button
             type="submit"
-            className="w-full bg-black py-3 px-3 text-white rounded-full hover:bg-gray-800 transition transform translate-y-[40%]"
+            className="w-full bg-black py-3 px-3 text-white border ring-2 ring-[#0A57FF] rounded-full hover:bg-gray-800 transition transform translate-y-[40%]"
             disabled={loading}
           >
             {loading ? 'Вход...' : 'ВОЙТИ'}
