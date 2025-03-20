@@ -5,6 +5,7 @@ import bgImage from '@/images/bg.png';
 import { useNavigate } from 'react-router-dom';
 import redCrossIcon from '@/images/logo.svg';
 
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

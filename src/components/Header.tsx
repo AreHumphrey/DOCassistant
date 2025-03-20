@@ -1,6 +1,7 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import redCrossIcon from '@/images/logo.svg';
+import HelpIcon from '@/images/del_app.svg';
 
 const Header: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -51,13 +52,16 @@ const Header: React.FC = () => {
             Иванов А.С.
           </a>
 
-          <div className="relative bg-[#0A57FF] text-white text-lg font-bold rounded-full px-5 py-3 cursor-pointer mb-4 sm:mb-0">
-            Тех помощь
-            <div className="absolute -bottom-2 right-3 w-0 h-0 
-                            border-l-[10px] border-l-transparent
-                            border-r-[10px] border-r-transparent
-                            border-t-[12px] border-t-[#0A57FF]">
-            </div>
+          <div
+            className="cursor-pointer transition-all duration-200 active:brightness-90"
+          >
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+              <img
+                src={HelpIcon}
+                alt="Тех помощь"
+                className="w-[150px] h-auto"
+              />
+            </a>
           </div>
           <div className="mt-4 block sm:hidden">
           </div>
