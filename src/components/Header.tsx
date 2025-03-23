@@ -8,7 +8,7 @@ const Header: React.FC = () => {
   const uid = searchParams.get('uid');
 
   return (
-    <header className="w-screen bg-white shadow-md h-auto sm:h-[100px] flex flex-col sm:flex-row items-center">
+    <header className="w-screen bg-white  h-auto sm:h-[100px] flex flex-col sm:flex-row items-center">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center sm:justify-between py-4 px-6 w-full">
 
         {/* Логотип */}
@@ -53,7 +53,7 @@ const Header: React.FC = () => {
           </a>
 
           <div
-            className="cursor-pointer transition-all duration-200 active:brightness-90"
+            className="cursor-pointer transition-all duration-200 translate-y-1.5 translate-x-2 active:brightness-90 "
           >
             <a href="https://example.com" target="_blank" rel="noopener noreferrer">
               <img
