@@ -7,18 +7,10 @@ import Footer from '@/components/Footer';
 import BorderFrame from '@/images/ramka.svg';
 import BorderFrameHover from '@/images/ramka_hover.svg';
 
-import LabIcon from '@/images/icon__doc.svg';
-import RadIcon from '@/images/icon__doc.svg';
-import FarIcon from '@/images/icon__doc.svg';
-import EkgIcon from '@/images/icon__doc.svg';
-
-// Добавляем объявление объекта с типами
-const aiMapping: Record<number, string> = {
-    1: "lab",
-    2: "rad",
-    3: "far",
-    4: "car",
-};
+import LabIcon from '@/images/icon_analiz.svg';
+import RadIcon from '@/images/icon_MRT.svg';
+import FarIcon from '@/images/icon_TABL.svg';
+import EkgIcon from '@/images/icon_ekg.svg';
 
 export default function MenuPage() {
     const { requireAuth } = useAuth();
@@ -42,71 +34,158 @@ export default function MenuPage() {
         requireAuth();
     }, [requireAuth]);
 
-    const handleButtonClick = (e: React.MouseEvent<HTMLDivElement>, sectorName: keyof typeof aiMapping) => {
+    // Переход на "/med" и сохранение в localStorage
+    const handleButtonClick = (e: React.MouseEvent<HTMLDivElement>, sectorName: number) => {
         e.preventDefault();
-        localStorage.setItem('ai', aiMapping[sectorName]);
-        navigate("/med");
-    };
+        if (sectorName === 1) localStorage.setItem('ai', "lab");
+        if (sectorName === 2) localStorage.setItem('ai', "rad");
+        if (sectorName === 3) localStorage.setItem('ai', "far");
+        if (sectorName === 4) localStorage.setItem('ai', "car");
 
-    const cards = [
-        { id: 1, text: "РАСШИФРОВКА\nЛАБ АНАЛИЗОВ", icon: LabIcon },
-        { id: 2, text: "ЛУЧЕВАЯ\nДИАГНОСТИКА", icon: RadIcon },
-        { id: 3, text: "СОВМЕСТИМОСТЬ\nЛЕКАРСТВ", icon: FarIcon },
-        { id: 4, text: "ЭКГ", icon: EkgIcon }
-    ];
+        navigate("/med"); // Переход на страницу "/med"
+    };
 
     return (
         <div className="h-screen w-screen flex flex-col bg-white">
             <Header />
 
-            {/* Блок с карточками с корректными отступами и границами */}
-            <div className={`mt-5 flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-16 
-                ${isMobile ? 'py-10 gap-y-28 mt-8 mb-10' : ''}`}  
+            {/* Блок с карточками */}
+            <div className={`mt-5 flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-32 
+                ${isMobile ? 'py-10 gap-y-28 mt-8 mb-42' : ''}`}  
             >
-                {cards.map((card) => (
-                    <div
-                        key={card.id}
-                        className={`relative p-2 cursor-pointer transition duration-200 group mb-20 
-                        ${isMobile ? 'w-full max-w-[280px] mx-auto h-[320px] flex flex-col justify-center items-center' : ''}`} 
-                        onClick={(e) => handleButtonClick(e, card.id as keyof typeof aiMapping)}
+                {/* Карточка: Лабораторные анализы */}
+                <div
+                    className={`relative p-2 cursor-pointer transition duration-200 group 
+                    ${isMobile ? 'w-full max-w-[280px] mx-auto h-[300px] flex flex-col justify-center items-center' : ''}`} 
+                    onClick={(e) => handleButtonClick(e, 1)}
+                >
+                    <img
+                        src={BorderFrame}
+                        alt="Рамка"
+                        className={`absolute inset-0 block group-hover:hidden
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <img
+                        src={BorderFrameHover}
+                        alt="Рамка (розовая)"
+                        className={`absolute inset-0 hidden group-hover:block
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <div 
+                        className={`relative z-10 flex flex-col items-center justify-center h-full p-4 text-center
+                        ${isMobile ? 'p-6' : ''}`}  
                     >
-                        <img
-                            src={BorderFrame}
-                            alt="Рамка"
-                            className={`absolute inset-0 w-full h-full block group-hover:hidden 
-                            ${isMobile ? 'scale-[1.5]' : ''}`} 
+                        <img 
+                            src={LabIcon} 
+                            alt="Иконка" 
+                            className={`w-32 h-32 sm:w-40 sm:h-40 mb-6`}  
                         />
-                        <img
-                            src={BorderFrameHover}
-                            alt="Рамка (розовая)"
-                            className={`absolute inset-0 w-full h-full hidden group-hover:block 
-                            ${isMobile ? 'scale-[1.5]' : ''}`} 
-                        />
-
-                        <div 
-                            className={`relative z-10 flex flex-col items-center justify-center h-full p-4 
-                            ${isMobile ? 'p-6' : ''}`}  
-                        >
-                            <img 
-                                src={card.icon} 
-                                alt="Иконка" 
-                                className={`w-20 h-20 sm:w-28 sm:h-28 mb-8`}  // Увеличенные иконки
-                            />
-                            <span 
-                                className={`text-black text-base sm:text-lg font-bold text-center leading-tight 
-                                ${isMobile ? 'text-lg max-h-[60px] overflow-hidden' : ''}`}
-                            >
-                                {card.text.split('\n').map((line, index) => (
-                                    <React.Fragment key={index}>
-                                        {line}<br/>
-                                    </React.Fragment>
-                                ))}
-                            </span>
-                        </div>
+                        <span className="text-black text-lg sm:text-xl font-bold text-center leading-tight">
+                            РАСШИФРОВКА<br />ЛАБ АНАЛИЗОВ
+                        </span>
                     </div>
-                ))}
-            </div>
+                </div>
+
+                {/* Карточка: Лучевая диагностика */}
+                <div
+                    className={`relative p-2 cursor-pointer transition duration-200 group 
+                    ${isMobile ? 'w-full max-w-[280px] mx-auto h-[300px] flex flex-col justify-center items-center' : ''}`} 
+                    onClick={(e) => handleButtonClick(e, 2)}
+                >
+                    <img
+                        src={BorderFrame}
+                        alt="Рамка"
+                        className={`absolute inset-0 block group-hover:hidden
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <img
+                        src={BorderFrameHover}
+                        alt="Рамка (розовая)"
+                        className={`absolute inset-0 hidden group-hover:block
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <div 
+                        className={`relative z-10 flex flex-col items-center justify-center h-full p-4 text-center
+                        ${isMobile ? 'p-6' : ''}`}  
+                    >
+                        <img 
+                            src={RadIcon} 
+                            alt="Иконка" 
+                            className={`w-32 h-32 sm:w-40 sm:h-40 mb-6`}  
+                        />
+                        <span className="text-black text-lg sm:text-xl font-bold text-center leading-tight">
+                            ЛУЧЕВАЯ<br />ДИАГНОСТИКА
+                        </span>
+                    </div>
+                </div>
+
+                {/* Карточка: Совместимость лекарств */}
+                <div
+                    className={`relative p-2 cursor-pointer transition duration-200 group 
+                    ${isMobile ? 'w-full max-w-[280px] mx-auto h-[300px] flex flex-col justify-center items-center' : ''}`} 
+                    onClick={(e) => handleButtonClick(e, 3)}
+                >
+                    <img
+                        src={BorderFrame}
+                        alt="Рамка"
+                        className={`absolute inset-0 block group-hover:hidden
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <img
+                        src={BorderFrameHover}
+                        alt="Рамка (розовая)"
+                        className={`absolute inset-0 hidden group-hover:block
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <div 
+                        className={`relative z-10 flex flex-col items-center justify-center h-full p-4 text-center
+                        ${isMobile ? 'p-6' : ''}`}  
+                    >
+                        <img 
+                            src={FarIcon} 
+                            alt="Иконка" 
+                            className={`w-32 h-32 sm:w-40 sm:h-40 mb-6`}  
+                        />
+                        <span className="text-black text-lg sm:text-xl font-bold text-center leading-tight">
+                            СОВМЕСТИМОСТЬ<br />ЛЕКАРСТВ
+                        </span>
+                    </div>
+                </div>
+
+                <div
+                    className={`relative p-2 cursor-pointer transition duration-200 group 
+                    ${isMobile ? 'w-full max-w-[280px] mx-auto h-[300px] flex flex-col justify-center items-center mb-[150px]' : ''}`} 
+                    onClick={(e) => handleButtonClick(e, 4)}
+                >
+                    <img
+                        src={BorderFrame}
+                        alt="Рамка"
+                        className={`absolute inset-0 block group-hover:hidden
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <img
+                        src={BorderFrameHover}
+                        alt="Рамка (розовая)"
+                        className={`absolute inset-0 hidden group-hover:block
+                        ${isMobile ? 'w-[400px] h-[400px]' : 'w-[500px] h-[500px]'}`}
+                    />
+                    <div 
+                        className={`relative z-10 flex flex-col items-center justify-center h-full p-4 text-center
+                        ${isMobile ? 'p-6' : ''}`}  
+                    >
+                        <img 
+                            src={EkgIcon} 
+                            alt="Иконка" 
+                            className={`w-32 h-32 sm:w-40 sm:h-40 mb-6`}  
+                        />
+                        <span className="text-black text-lg sm:text-xl font-bold text-center leading-tight">
+                            ЭКГ
+                        </span>
+                    </div>
+                </div>
+
             
+            </div>
 
             <Footer />
         </div>
