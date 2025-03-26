@@ -10,6 +10,8 @@ import DrugPage from './pages/DragPage'
 import FilesPage from './pages/FilesPage'
 import AnswerPage from './pages/AnswerPage'
 import ProfilePage from './pages/ProfilePage' 
+import ResetPasswordPage from './pages/ResetPasswordPage';
+
 
 function App() {
 
@@ -26,6 +28,7 @@ function App() {
           <Route path={'/ai/far'} element={<DrugPage />} />
           <Route path={'/answer'} element={<AnswerPage />} />
           <Route path={'/profile'} element={<ProfilePage />} /> 
+          <Route path={'/reset-password'} element={<ResetPasswordPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>  

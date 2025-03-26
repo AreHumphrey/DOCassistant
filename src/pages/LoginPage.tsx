@@ -119,11 +119,12 @@ export default function LoginPage() {
 
           {/* Ссылка */}
           <a
-            href="#"
+            href="/reset-password"
             className="text-white text-xl hover:text-white active:text-white focus:outline-none hover:underline text-center w-full sm:w-auto"
           >
             Забыли пароль?
           </a>
+
           </div>
 
 

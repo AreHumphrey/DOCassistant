@@ -66,7 +66,7 @@ export default function ProfilePage() {
         <img 
             src={UserIcon} 
             alt="Пользователь" 
-            className="w-40 h-40 sm:w-75 sm:h-75 mb-4 transition-all duration-300"
+            className="w-40 h-40 sm:w-80 sm:h-80 mb-4 transition-all duration-300"
         />
 
         {/* Приветствие по центру относительно иконки */}
