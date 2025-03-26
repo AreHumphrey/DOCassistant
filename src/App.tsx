@@ -10,11 +10,10 @@ import DrugPage from './pages/DragPage'
 import FilesPage from './pages/FilesPage'
 import AnswerPage from './pages/AnswerPage'
 import ProfilePage from './pages/ProfilePage' 
-import ResetPasswordPage from './pages/ResetPasswordPage';
-
+import ResetPasswordPage from './pages/ResetPasswordPage'
+import NewPasswordPage from './pages/NewPasswordPage' // ← добавлено
 
 function App() {
-
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -27,11 +26,12 @@ function App() {
           <Route path={'/ai/lab'} element={<LabPage />} />
           <Route path={'/ai/far'} element={<DrugPage />} />
           <Route path={'/answer'} element={<AnswerPage />} />
-          <Route path={'/profile'} element={<ProfilePage />} /> 
+          <Route path={'/profile'} element={<ProfilePage />} />
           <Route path={'/reset-password'} element={<ResetPasswordPage />} />
+          <Route path={'/new-password'} element={<NewPasswordPage />} /> {/* ← добавлено */}
         </Routes>
       </AuthProvider>
-    </BrowserRouter>  
+    </BrowserRouter>
   )
 }
 
