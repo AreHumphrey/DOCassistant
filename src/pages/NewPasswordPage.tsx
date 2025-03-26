@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import bgImage from '@/images/bg.png';
 import redCrossIcon from '@/images/logo.svg';
+import { useParams } from 'react-router-dom';
 
 export default function NewPasswordPage() {
   const [newPassword, setNewPassword] = useState('');
@@ -11,7 +12,8 @@ export default function NewPasswordPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token') || '';
+  const { token } = useParams();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +28,8 @@ export default function NewPasswordPage() {
       });
       navigate('/login');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Ошибка при смене пароля.');
+      const errors = err.response?.data?.detail || err.response?.data?.message;
+      setError(Array.isArray(errors) ? errors.join(', ') : errors || 'Ошибка при смене пароля.');
     } finally {
       setLoading(false);
     }
@@ -80,6 +83,12 @@ export default function NewPasswordPage() {
           >
             {loading ? 'Сохранение...' : 'СМЕНИТЬ ПАРОЛЬ'}
           </button>
+
+          <div className="text-center mt-2">
+            <a href="/login" className="text-white text-xl">
+              Вернуться к входу
+            </a>
+          </div>
         </form>
       </div>
     </div>

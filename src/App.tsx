@@ -28,7 +28,8 @@ function App() {
           <Route path={'/answer'} element={<AnswerPage />} />
           <Route path={'/profile'} element={<ProfilePage />} />
           <Route path={'/reset-password'} element={<ResetPasswordPage />} />
-          <Route path={'/new-password'} element={<NewPasswordPage />} /> {/* ← добавлено */}
+          <Route path={'/reset-password/:token'} element={<NewPasswordPage />} />
+
         </Routes>
       </AuthProvider>
     </BrowserRouter>
