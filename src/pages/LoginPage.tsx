@@ -13,22 +13,30 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [rememberMe, setRememberMe] = useState(false);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
+  
     try {
       const response = await axios.post('/api/login', {
         email,
         password,
       });
-
+  
       const { access_token, token_type } = response.data;
-
-      localStorage.setItem('token', access_token);
-      localStorage.setItem('token_type', token_type);
+  
+      if (rememberMe) {
+        localStorage.setItem('token', access_token);
+        localStorage.setItem('token_type', token_type);
+      } else {
+        sessionStorage.setItem('token', access_token);
+        sessionStorage.setItem('token_type', token_type);
+      }
+  
       login(access_token);
       alert('Успешный вход!');
       navigate('/');
@@ -38,6 +46,7 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div
@@ -94,37 +103,32 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Чекбокс + Ссылка */}
-          <div className="flex flex-col sm:flex-row items-center sm:justify-between text-xl mb-4">
-
-          {/* Чекбокс */}
-          <div className="flex items-center justify-center w-full sm:w-auto mb-5 sm:mb-0">
-            <input
-              type="checkbox"
-              id="remember"
-              className="hidden peer"
-            />
-
-            {/* Кастомный крестик-чекбокс */}
-            <label
-              htmlFor="remember"
-              className="w-6 h-6 border-2 border-blue-500 rounded-md bg-white flex items-center justify-center cursor-pointer peer-checked:bg-red-500"
-            >
-              <span className="text-white text-lg font-bold select-none">+</span>
+          <div className="flex flex-col sm:flex-row items-center sm:justify-between text-xl mb-4 gap-4">
+            {/* Чекбокс */}
+            <label className="inline-flex items-center cursor-pointer text-white text-xl font-medium">
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                  className="sr-only peer"
+                />
+                <div className="w-6 h-6 bg-white border-2 border-white rounded-sm peer-checked:bg-white peer-checked:border-white flex items-center justify-center">
+                  {rememberMe && (
+                    <span className="text-red-600 text-2xl leading-none -translate-y-[1px] select-none">✚</span>
+                  )}
+                </div>
+              </div>
+              <span className="ml-2 text-xl">Сохранить</span>
             </label>
 
-            {/* Текст "Сохранить" */}
-            <span className="ml-2 text-white text-xl">Сохранить</span>
-          </div>
-
-          {/* Ссылка */}
-          <a
-            href="/reset-password"
-            className="text-white text-xl hover:text-white active:text-white focus:outline-none hover:underline text-center w-full sm:w-auto"
-          >
-            Забыли пароль?
-          </a>
-
+            {/* Ссылка */}
+            <a
+              href="/reset-password"
+              className="text-white text-xl font-medium hover:text-white active:text-white focus:outline-none hover:underline text-center w-full sm:w-auto"
+            >
+              Забыли пароль?
+            </a>
           </div>
 
 
