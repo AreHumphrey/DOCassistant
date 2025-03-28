@@ -48,14 +48,14 @@ const Header: React.FC = () => {
     <header className="w-screen bg-white h-auto sm:h-[100px] flex flex-col sm:flex-row items-center">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center sm:justify-between py-4 px-6 w-full">
 
-        {/* Логотип */}
-        <div className="flex items-center font-bold text-2xl sm:-ml-10 -mt-[60%] -mb-[60%] sm:mt-[-12px] sm:mb-0">
-          <img 
-            src={redCrossIcon} 
-            alt="DocAssistant" 
-            className="w-[600px] h-[600px] sm:w-[400px] sm:h-[400px] object-contain"
-          />
-        </div>
+      <a href="/" className="flex items-center font-bold text-2xl sm:-ml-10 -mt-[60%] -mb-[60%] sm:mt-[-12px] sm:mb-0">
+        <img 
+          src={redCrossIcon} 
+          alt="DocAssistant" 
+          className="w-[600px] h-[600px] sm:w-[400px] sm:h-[400px] object-contain"
+        />
+      </a>
+
 
         {/* Навигация */}
         <nav className="flex flex-col items-center sm:flex-row space-y-4 sm:space-y-0 sm:space-x-24 text-[#000000] text-lg justify-center sm:-translate-x-[30px]">

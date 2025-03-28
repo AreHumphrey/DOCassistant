@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import bgImage from '@/images/bg.png';
+import { useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import redCrossIcon from '@/images/logo.svg';
-import { useParams } from 'react-router-dom';
+import bgVideo from '@/images/bg_video.mp4';
 
 export default function NewPasswordPage() {
   const [newPassword, setNewPassword] = useState('');
@@ -13,7 +12,6 @@ export default function NewPasswordPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { token } = useParams();
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,15 +34,26 @@ export default function NewPasswordPage() {
   };
 
   return (
-    <div
-      className="h-screen w-screen flex items-center justify-center bg-cover bg-center px-4"
-      style={{ backgroundImage: `url(${bgImage})` }}
-    >
-      <div className="absolute top-0 left-0 transform -translate-y-[220px]">
+    <div className="relative h-screen w-screen flex items-center justify-center overflow-hidden px-4">
+
+      {/* Фоновое видео */}
+      <video
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        autoPlay
+        loop
+        muted
+      >
+        <source src={bgVideo} type="video/mp4" />
+        Ваш браузер не поддерживает видео.
+      </video>
+
+      {/* Логотип */}
+      <div className="absolute top-0 left-0 transform -translate-y-[220px] z-10">
         <img src={redCrossIcon} alt="DocAssistant" className="w-[550px] h-[550px]" />
       </div>
 
-      <div className="bg-[#61A4FA] bg-opacity-80 p-20 rounded-3xl shadow-lg w-full max-w-xl pb-10">
+      {/* Форма смены пароля */}
+      <div className="relative z-10 bg-[#61A4FA] bg-opacity-80 p-20 rounded-3xl shadow-lg w-full max-w-xl pb-10">
         <form onSubmit={handleSubmit} className="space-y-10 -translate-y-[10%]">
           <div className="mb-4">
             <label htmlFor="newPassword" className="block mb-2 text-xl font-medium text-white">

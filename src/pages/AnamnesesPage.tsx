@@ -1,49 +1,256 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 
-import AnamnesProfile from "@/components/Anamnes/AnamnesProfile";
-import AnamnesUpload from "@/components/FileManager/AnamnesUpload";
+import { RootState, AppDispatch } from "@/stores/store";
+import { addAnamnes } from "@/stores/anamnesSlice";
+
 import Header from "@/components/Header";
-import AnamnesAddModal from "@/components/Anamnes/AnamnesAddModal";
+import Footer from "@/components/Footer";
 
-import { RootState } from "@/stores/store";
-import { useSelector } from "react-redux";
+import BlueBackgroundSVG from '@/images/bg_ramka.svg';
+import PdfIcon from '@/images/icon__pdf.svg';
+import DocIcon from '@/images/icon__doc.svg';
+import TxtIcon from '@/images/icon__txt.svg';
+import XlsIcon from '@/images/icon__xls.svg';
 
 export default function AnamnesesPage() {
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-    const navigate = useNavigate()
+  const [fio, setFio] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [patronymic, setPatronymic] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [scanDate, setScanDate] = useState("");
+  const [anamnes, setAnamnes] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showCard, setShowCard] = useState(false);
 
-    const { anamnes} = useSelector(
-        (state: RootState) => state.anamnes
-    );
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { anamnes: anamnesState } = useSelector((state: RootState) => state.anamnes);
 
-    const handelContinue = () => {
-      localStorage.setItem("uid", anamnes?.uid || "")
-      navigate(`/files`)
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const isValidDate = (dateStr: string, allowToday = false) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const yearStr = dateStr.split("-")[0];
+    const year = parseInt(yearStr);
+
+    if (isNaN(date.getTime()) || !/^\d{4}$/.test(yearStr) || year < 1900 || year > now.getFullYear() + 1) {
+      return false;
     }
 
+    if (allowToday) {
+      return date <= now;
+    }
 
-    return (
-    <div className="min-h-screen flex flex-col">
+    return date < now;
+  };
+
+  const handleSubmit = async () => {
+    if (!isValidDate(birthday)) {
+      setError("Введите корректную дату рождения. Она не может быть в будущем.");
+      return;
+    }
+    if (!isValidDate(scanDate, true)) {
+      setError("Введите корректную дату снимка. Она не может быть в будущем.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post('/api/anamnes', {
+        fio: `${lastname} ${fio} ${patronymic}`.trim(),
+        birthday,
+        scan_date: scanDate,
+        anamnes
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const updatedAnamnes = {
+        ...response.data,
+        birthday: response.data.birthday,
+        scan_date: response.data.scan_date,
+      };
+
+      dispatch(addAnamnes(updatedAnamnes));
+      localStorage.setItem("uid", updatedAnamnes.uid);
+      setError("");
+      setShowCard(true);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Ошибка при отправке анамнеза. Проверьте данные.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await axios.post("/api/anamnes/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const updatedAnamnes = {
+        ...response.data,
+        birthday: response.data.birthday,
+        scan_date: response.data.scan_date,
+      };
+
+      dispatch(addAnamnes(updatedAnamnes));
+      localStorage.setItem("uid", updatedAnamnes.uid);
+      setShowCard(true);
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Ошибка загрузки файла.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = () => {
+    localStorage.removeItem("uid");
+    setShowCard(false);
+  };
+
+  const handleNext = () => {
+    navigate("/files");
+  };
+
+  return (
+    <div className="min-h-screen w-screen overflow-x-hidden flex flex-col bg-white">
       <Header />
-      <div className="flex flex-col flex-grow justify-center items-center">
-        <div className="flex flex-row items-center gap-36 p-6">
-            <AnamnesProfile />
-            <div className="flex flex-col gap-1 items-center">
-                <AnamnesUpload />
-                <button
-                className="w-80 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-                onClick={() => setIsOpen(true)}>Добавить вручную</button>
+
+      <main className="flex flex-col items-center justify-center flex-grow px-4 py-10">
+        {/* Синий SVG блок */}
+        <div className="relative w-full max-w-5xl mb-16 sm:rounded-[24px]">
+          <img src={BlueBackgroundSVG} alt="Background" className="w-full h-full object-cover rounded-xl sm:min-h-[320px] min-h-[450px] rounded-xl rounded-2xl" />
+          <div className="absolute inset-0 flex flex-col justify-center items-center text-black px-4 text-center py-20 sm:py-24">
+            <p className="text-xl md:text-2xl font-semibold max-w-2xl">
+              Для автоматического создания карточки пациента<br />
+              перетащите сюда файл с историей болезни<br />
+              в формате: <strong>PDF, DOC, TXT, XLS</strong>.
+            </p>
+            <a
+              href="#"
+              className="text-blue-500 underline text-xl mt-4 hover:font-semibold active:font-semibold"
+              onClick={(e) => {
+                e.preventDefault();
+                fileInputRef.current?.click();
+              }}
+            >
+              или загрузите файл
+            </a>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
+            <div className="flex items-center justify-center gap-4 sm:gap-6 mt-8 flex-wrap max-w-full sm:scale-110">
+              <img src={PdfIcon} alt="PDF" className="w-10 h-10 sm:w-14 sm:h-14" />
+              <img src={DocIcon} alt="DOC" className="w-10 h-10 sm:w-14 sm:h-14" />
+              <img src={TxtIcon} alt="TXT" className="w-10 h-10 sm:w-14 sm:h-14" />
+              <img src={XlsIcon} alt="XLS" className="w-10 h-10 sm:w-14 sm:h-14" />
             </div>
+          </div>
         </div>
-        <button 
-        className="w-36 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-        onClick={() => handelContinue()}
-        >
-            Далее
-        </button>
-      </div>
-      <AnamnesAddModal isOpen={isOpen} onClose={setIsOpen}/>
+
+        {/* Поля формы */}
+        <section className="w-full max-w-5xl bg-white px-2">
+          <p className="text-lg font-semibold text-black mb-2">Создание карточки пациента</p>
+          <h2 className="text-4xl font-extrabold mb-10 text-black">Данные пациента</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 w-full">
+            <input placeholder="Имя" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={fio} onChange={(e) => setFio(e.target.value)} />
+            <input placeholder="Фамилия" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={lastname} onChange={(e) => setLastname(e.target.value)} />
+            <input placeholder="Отчество" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={patronymic} onChange={(e) => setPatronymic(e.target.value)} />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 w-full">
+            <input
+              type="text"
+              placeholder="Дата рождения"
+              onFocus={(e) => (e.target.type = "date")}
+              onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
+              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Дата снимка"
+              onFocus={(e) => (e.target.type = "date")}
+              onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
+              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
+              value={scanDate}
+              onChange={(e) => setScanDate(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 mb-6 w-full">
+            <input
+              placeholder="Заметки"
+              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
+              value={anamnes}
+              onChange={(e) => setAnamnes(e.target.value)}
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-xl mb-4">{error}</p>}
+
+          <div className="flex justify-start">
+            <button
+              className="bg-blue-600 text-white py-3 px-10 w-full md:w-[300px] rounded-full text-lg font-medium hover:bg-blue-700 text-left"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? "Сохранение..." : "Создать"}
+            </button>
+          </div>
+
+           {showCard && anamnesState && (
+            <div className="mt-10 w-full flex flex-col items-center">
+              <div className="border-[2.5px] border-blue-500 rounded-[24px] px-10 py-8 text-left text-black w-full max-w-3xl bg-blue-100">
+                <p className="text-xl font-bold mb-2">{anamnesState.fio}</p>
+                <p className="text-md mb-1">Дата рождения: {anamnesState.birthday}</p>
+                <p className="text-md mb-1">Дата снимка: {anamnesState.scan_date}</p>
+                <p className="text-md mb-2">Заметки: {anamnesState.anamnes}</p>
+                <button onClick={handleDelete} className="mt-4 bg-[#FE7678] text-white px-6 py-2 rounded-full text-sm font-semibold hover:opacity-90">
+                  Удалить
+                </button>
+              </div>
+
+              <button onClick={handleNext} className="mt-6 bg-[#0A57FF] text-white py-3 px-12 rounded-full text-lg font-semibold hover:bg-blue-700">
+                Далее
+              </button>
+            </div>
+          )}
+
+          <div className="mt-36"></div>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }
