@@ -87,9 +87,9 @@ export default function MenuPage() {
           }].map(({ icon, label, sector }, index) => (
           <div
             key={index}
-            className={`${cardClasses} ${isMobile && sector === 4 ? 'mb-[150px]' : ''}`}
+            className={cardClasses}
             onClick={(e) => handleButtonClick(e, sector)}
-            style={{ height: isMobile ? '520px' : '500px' }} // фиксируем высоту карточки
+            style={{ height: isMobile ? '520px' : '500px' }}
           >
             <img
               src={BorderFrame}

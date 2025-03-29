@@ -1,10 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
 import { RootState, AppDispatch } from "@/stores/store";
-import { addAnamnes } from "@/stores/anamnesSlice";
+import { addAnamnes, getAnamnesFromFile } from "@/stores/anamnesSlice";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -25,6 +26,8 @@ export default function AnamnesesPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showCard, setShowCard] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "success" | "error">("idle");
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -50,6 +53,12 @@ export default function AnamnesesPage() {
   };
 
   const handleSubmit = async () => {
+    if (!fio && !lastname && !patronymic && !birthday && !scanDate && !anamnes && anamnesState) {
+      // Если данные из файла уже есть, пропускаем ручной ввод
+      navigate("/files");
+      return;
+    }
+
     if (!isValidDate(birthday)) {
       setError("Введите корректную дату рождения. Она не может быть в будущем.");
       return;
@@ -96,34 +105,24 @@ export default function AnamnesesPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
+    setUploadProgress(0);
+    setUploadStatus("idle");
 
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await axios.post("/api/anamnes/upload", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+    dispatch(
+      getAnamnesFromFile({
+        file,
+        onProgress: (progress: number) => setUploadProgress(progress),
+      })
+    )
+      .unwrap()
+      .then(() => {
+        setUploadStatus("success");
+        setShowCard(true);
+      })
+      .catch(() => {
+        setUploadStatus("error");
+        setShowCard(false);
       });
-
-      const updatedAnamnes = {
-        ...response.data,
-        birthday: response.data.birthday,
-        scan_date: response.data.scan_date,
-      };
-
-      dispatch(addAnamnes(updatedAnamnes));
-      localStorage.setItem("uid", updatedAnamnes.uid);
-      setShowCard(true);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Ошибка загрузки файла.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleDelete = () => {
@@ -142,7 +141,7 @@ export default function AnamnesesPage() {
       <main className="flex flex-col items-center justify-center flex-grow px-4 py-10">
         {/* Синий SVG блок */}
         <div className="relative w-full max-w-5xl mb-16 sm:rounded-[24px]">
-          <img src={BlueBackgroundSVG} alt="Background" className="w-full h-full object-cover rounded-xl sm:min-h-[320px] min-h-[450px] rounded-xl rounded-2xl" />
+          <img src={BlueBackgroundSVG} alt="Background" className="w-full h-full object-cover rounded-xl sm:min-h-[320px] min-h-[450px] rounded-2xl" />
           <div className="absolute inset-0 flex flex-col justify-center items-center text-black px-4 text-center py-20 sm:py-24">
             <p className="text-xl md:text-2xl font-semibold max-w-2xl">
               Для автоматического создания карточки пациента<br />
@@ -172,6 +171,15 @@ export default function AnamnesesPage() {
               <img src={TxtIcon} alt="TXT" className="w-10 h-10 sm:w-14 sm:h-14" />
               <img src={XlsIcon} alt="XLS" className="w-10 h-10 sm:w-14 sm:h-14" />
             </div>
+            {uploadProgress !== null && (
+              <p className="text-blue-600 mt-4">Загружено {uploadProgress}%</p>
+            )}
+            {uploadStatus === "success" && (
+              <p className="text-green-600 mt-2">Файл успешно загружен</p>
+            )}
+            {uploadStatus === "error" && (
+              <p className="text-red-600 mt-2">Ошибка загрузки файла</p>
+            )}
           </div>
         </div>
 
@@ -230,7 +238,7 @@ export default function AnamnesesPage() {
 
            {showCard && anamnesState && (
             <div className="mt-10 w-full flex flex-col items-center">
-              <div className="border-[2.5px] border-blue-500 rounded-[24px] px-10 py-8 text-left text-black w-full max-w-3xl bg-blue-100">
+              <div className="border-[2.5px] border-blue-500 bg-white rounded-[24px] px-10 py-8 text-left text-black w-full max-w-3xl bg-blue-100">
                 <p className="text-xl font-bold mb-2">{anamnesState.fio}</p>
                 <p className="text-md mb-1">Дата рождения: {anamnesState.birthday}</p>
                 <p className="text-md mb-1">Дата снимка: {anamnesState.scan_date}</p>
@@ -246,7 +254,7 @@ export default function AnamnesesPage() {
             </div>
           )}
 
-          <div className="mt-36"></div>
+          <div className="mt-24"></div>
         </section>
       </main>
 

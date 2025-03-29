@@ -15,47 +15,55 @@ interface UserProfile {
 const Header: React.FC = () => {
   const [searchParams] = useSearchParams();
   const uid = searchParams.get('uid');
-  
+
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const token = localStorage.getItem('token');
       const tokenType = localStorage.getItem('token_type');
-      
-      if (!token || !tokenType) return;
-
+  
+      console.log("TOKEN:", token);
+      console.log("TYPE:", tokenType);
+  
+      if (!token || !tokenType) {
+        console.warn("Token or token_type is missing in localStorage");
+        return;
+      }
+  
       try {
         const response = await axios.get('/api/profile', {
           headers: {
-            Authorization: `${tokenType} ${token}`
-          }
+            Authorization: `${tokenType} ${token}`,
+          },
         });
+  
+        console.log("RESPONSE:", response.data);
         setUserProfile(response.data);
       } catch (error) {
-        console.error("Ошибка загрузки данных профиля", error);
+        console.error("Ошибка загрузки данных профиля:", error);
+        // Попробуй обновить токен здесь, если есть refresh-токен
       }
     };
-
+  
     fetchUserProfile();
   }, []);
+""  
 
   const displayName = userProfile
-    ? `${userProfile.last_name} ${userProfile.first_name[0]}.${userProfile.middle_name[0]}.`
+    ? `${userProfile.last_name} ${userProfile.first_name?.[0] || ''}.${userProfile.middle_name?.[0] || ''}.`
     : 'Пользователь';
 
   return (
     <header className="w-screen bg-white h-auto sm:h-[100px] flex flex-col sm:flex-row items-center">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-center sm:justify-between py-4 px-6 w-full">
-
-      <a href="/" className="flex items-center font-bold text-2xl sm:-ml-10 -mt-[60%] -mb-[60%] sm:mt-[-12px] sm:mb-0">
-        <img 
-          src={redCrossIcon} 
-          alt="DocAssistant" 
-          className="w-[600px] h-[600px] sm:w-[400px] sm:h-[400px] object-contain"
-        />
-      </a>
-
+        <a href="/" className="flex items-center font-bold text-2xl sm:-ml-10 -mt-[60%] -mb-[60%] sm:mt-[-12px] sm:mb-0">
+          <img 
+            src={redCrossIcon} 
+            alt="DocAssistant" 
+            className="w-[600px] h-[600px] sm:w-[400px] sm:h-[400px] object-contain"
+          />
+        </a>
 
         {/* Навигация */}
         <nav className="flex flex-col items-center sm:flex-row space-y-4 sm:space-y-0 sm:space-x-24 text-[#000000] text-lg justify-center sm:-translate-x-[30px]">
