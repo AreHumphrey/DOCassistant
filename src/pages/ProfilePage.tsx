@@ -19,8 +19,9 @@ export default function ProfilePage() {
   
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const token = localStorage.getItem('token');
-      const tokenType = localStorage.getItem('token_type');
+        const token = localStorage.getItem('token');
+        const tokenType = 'Bearer';
+        
 
       if (!token || !tokenType) {
         setError('Ошибка авторизации. Войдите в систему.');

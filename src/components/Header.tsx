@@ -15,19 +15,19 @@ interface UserProfile {
 const Header: React.FC = () => {
   const [searchParams] = useSearchParams();
   const uid = searchParams.get('uid');
-
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       const token = localStorage.getItem('token');
-      const tokenType = localStorage.getItem('token_type');
+      const tokenType = 'Bearer';
+
   
       console.log("TOKEN:", token);
       console.log("TYPE:", tokenType);
   
       if (!token || !tokenType) {
-        console.warn("Token or token_type is missing in localStorage");
+        console.warn("Token или token_type отсутствуют в localStorage");
         return;
       }
   
@@ -38,17 +38,22 @@ const Header: React.FC = () => {
           },
         });
   
-        console.log("RESPONSE:", response.data);
         setUserProfile(response.data);
       } catch (error) {
-        console.error("Ошибка загрузки данных профиля:", error);
-        // Попробуй обновить токен здесь, если есть refresh-токен
+        console.error("Ошибка загрузки данных профиля", error);
       }
     };
   
-    fetchUserProfile();
+    // Подождём чуть-чуть, чтобы localStorage успел записаться
+    const timeout = setTimeout(() => {
+      if (document.visibilityState === 'visible') {
+        fetchUserProfile();
+      }
+    }, 200);
+  
+    return () => clearTimeout(timeout);
   }, []);
-""  
+  
 
   const displayName = userProfile
     ? `${userProfile.last_name} ${userProfile.first_name?.[0] || ''}.${userProfile.middle_name?.[0] || ''}.`

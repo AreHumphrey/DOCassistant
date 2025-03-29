@@ -18,23 +18,19 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-  
+
     try {
       const response = await axios.post('/api/login', {
         email,
         password,
       });
-  
-      const { access_token, token_type } = response.data;
-  
-      if (rememberMe) {
-        localStorage.setItem('token', access_token);
-        localStorage.setItem('token_type', token_type);
-      } else {
-        sessionStorage.setItem('token', access_token);
-        sessionStorage.setItem('token_type', token_type);
-      }
-  
+
+      const { access_token } = response.data;
+
+      // Сохраняем токен с типом Bearer в localStorage (как в старой версии)
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('token_type', 'Bearer');
+
       login(access_token);
       alert('Успешный вход!');
       navigate('/');
@@ -44,6 +40,7 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="relative h-screen w-screen flex items-center justify-center overflow-hidden px-4">
@@ -139,3 +136,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
