@@ -125,15 +125,7 @@ export default function ProfilePage() {
                 <span className="block text-lg font-bold">{userProfile.origin_name}</span>
               </div>
 
-              {/* Кнопка смены пароля */}
-              <div className="flex justify-center pt-6 mt-12 mb-8">
-                <button
-                  onClick={handleChangePassword}
-                  className="bg-[#61A4FA] text-white border-2 border-white py-3 px-6 rounded-full text-lg hover:border-white hover:bg-[#5290E8] transition"
-                >
-                  Сменить пароль
-                </button>
-              </div>
+           
             </div>
           )}
         </div>

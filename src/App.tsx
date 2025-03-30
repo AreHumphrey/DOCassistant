@@ -9,27 +9,28 @@ import LabPage from './pages/LabPage'
 import DrugPage from './pages/DragPage'
 import FilesPage from './pages/FilesPage'
 import AnswerPage from './pages/AnswerPage'
-import ProfilePage from './pages/ProfilePage' 
+import ProfilePage from './pages/ProfilePage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
-import NewPasswordPage from './pages/NewPasswordPage' // ← добавлено
+import NewPasswordPage from './pages/NewPasswordPage'
+import HistoryPage from './pages/HistoryPage' // ← добавлен новый импорт
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path={'/login'} element={<LoginPage />} />
-          <Route path={'/'} element={<MenuPage />} />
-          <Route path={'/med'} element={<AnamnesesPage />} />
-          <Route path={'/files'} element={<FilesPage />} />
-          <Route path={'/saved-prompts'} element={<SavedPromptPage />} />
-          <Route path={'/ai/lab'} element={<LabPage />} />
-          <Route path={'/ai/far'} element={<DrugPage />} />
-          <Route path={'/answer'} element={<AnswerPage />} />
-          <Route path={'/profile'} element={<ProfilePage />} />
-          <Route path={'/reset-password'} element={<ResetPasswordPage />} />
-          <Route path={'/reset-password/:token'} element={<NewPasswordPage />} />
-
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<MenuPage />} />
+          <Route path="/med" element={<AnamnesesPage />} />
+          <Route path="/files" element={<FilesPage />} />
+          <Route path="/saved-prompts" element={<SavedPromptPage />} />
+          <Route path="/ai/lab" element={<LabPage />} />
+          <Route path="/ai/far" element={<DrugPage />} />
+          <Route path="/ai/rad" element={<HistoryPage />} /> {/* ← новый маршрут */}
+          <Route path="/answer" element={<AnswerPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/reset-password/:token" element={<NewPasswordPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
