@@ -153,7 +153,10 @@ export default function HistoryPage() {
       <Header />
 
       <main className="flex-grow w-full px-8 py-10">
-        <h1 className="text-[36px] font-semibold mb-10 text-black text-left">Запросы ИИ</h1>
+
+        <h1 className="text-[50px] font-semibold mb-10 text-black text-left tracking-wider">
+  ЗАПРОСЫ ИИ
+</h1>
 
         <input
           type="text"

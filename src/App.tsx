@@ -12,7 +12,8 @@ import AnswerPage from './pages/AnswerPage'
 import ProfilePage from './pages/ProfilePage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import NewPasswordPage from './pages/NewPasswordPage'
-import HistoryPage from './pages/HistoryPage' // ← добавлен новый импорт
+import HistoryPage from './pages/HistoryPage'
+import PatientsPage from './pages/PatientsPage'
 
 function App() {
   return (
@@ -26,11 +27,13 @@ function App() {
           <Route path="/saved-prompts" element={<SavedPromptPage />} />
           <Route path="/ai/lab" element={<LabPage />} />
           <Route path="/ai/far" element={<DrugPage />} />
-          <Route path="/ai/rad" element={<HistoryPage />} /> {/* ← новый маршрут */}
+          <Route path="/ai/rad" element={<HistoryPage />} />
           <Route path="/answer" element={<AnswerPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/reset-password/:token" element={<NewPasswordPage />} />
+          <Route path="/patients" element={<PatientsPage />} />
+
         </Routes>
       </AuthProvider>
     </BrowserRouter>

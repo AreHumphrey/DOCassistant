@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import redCrossIcon from '@/images/logo.svg';
 import HelpIcon from '@/images/del_app.svg';
+import { useLocation } from 'react-router-dom';
+
 
 interface UserProfile {
   email: string;
@@ -14,6 +16,7 @@ interface UserProfile {
 
 const Header: React.FC = () => {
   const [searchParams] = useSearchParams();
+  
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [uid, setUid] = useState<string | undefined>(() => {
     return searchParams.get('uid') || localStorage.getItem('uid') || undefined;
@@ -84,12 +87,13 @@ const Header: React.FC = () => {
         </a>
 
         <nav className="flex flex-col items-center sm:flex-row space-y-4 sm:space-y-0 sm:space-x-24 text-[#000000] text-lg justify-center sm:-translate-x-[30px]">
-          <a
-            href={linkWithUid('/ai/lab')}
-            className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
-          >
-            Карточки пациентов
-          </a>
+        <a
+          href={linkWithUid('/patients')}
+          className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
+        >
+          Карточки пациентов
+        </a>
+
           <a
             href={linkWithUid('/ai/rad')}
             className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
