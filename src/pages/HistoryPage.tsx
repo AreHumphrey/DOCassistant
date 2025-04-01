@@ -24,57 +24,43 @@ type SortKey = 'id' | 'full_name' | 'age' | 'created_at' | 'purpose';
 const fakeData: SavedPrompt[] = [
   {
     id: 1,
-    prompt_name: 'Анализ крови',
-    prompt: 'Расшифруй общий анализ крови пациента',
-    purpose: 'АНАЛИЗЫ',
-    gpt_answer: 'Гемоглобин в норме, лейкоциты повышены...',
-    filenames: ['blood_test.pdf'],
-    thread_id: 'abc123',
-    created_at: '2024-03-15T12:00:00Z',
-    full_name: 'Иванов Сергей Семенович',
-    age: 56,
+    prompt_name: '',
+    prompt: '',
+    purpose: '',
+    gpt_answer: '',
+    filenames: [],
+    thread_id: '',
+    created_at: '',
+    full_name: 'Иванов Иван Иванович',
+    age: 45,
   },
   {
     id: 2,
-    prompt_name: 'ЭКГ результат',
-    prompt: 'Расшифруй ЭКГ',
-    purpose: 'ЭКГ',
-    gpt_answer: 'Признаки гипертрофии левого желудочка...',
-    filenames: ['ecg_report.pdf'],
-    thread_id: 'def456',
-    created_at: '2024-04-19T10:30:00Z',
-    full_name: 'Петров Сергей Иванович',
-    age: 34,
+    prompt_name: '',
+    prompt: '',
+    purpose: '',
+    gpt_answer: '',
+    filenames: [],
+    thread_id: '',
+    created_at: '',
+    full_name: 'Петрова Анна Сергеевна',
+    age: 32,
   },
   {
     id: 3,
-    prompt_name: 'Анализ мочи',
-    prompt: 'Интерпретация анализа мочи',
-    purpose: 'АНАЛИЗЫ',
-    gpt_answer: 'Белок в норме, кетоны не обнаружены...',
-    filenames: ['urine_test.pdf'],
-    thread_id: 'ghi789',
-    created_at: '2024-03-15T15:00:00Z',
-    full_name: 'Иванов Сергей Семенович',
-    age: 56,
-  },
-  {
-    id: 4,
-    prompt_name: 'Рентген',
-    prompt: 'Опиши рентген грудной клетки',
-    purpose: 'ЛУЧЕВАЯ ДИАГНОСТИКА',
-    gpt_answer: 'Снимок показывает нормальную прозрачность...',
-    filenames: ['xray.png'],
-    thread_id: 'jkl012',
-    created_at: '2024-02-14T09:00:00Z',
-    full_name: 'Семенов Андрей Владимирович',
-    age: 23,
+    prompt_name: '',
+    prompt: '',
+    purpose: '',
+    gpt_answer: '',
+    filenames: [],
+    thread_id: '',
+    created_at: '',
+    full_name: 'Сидоров Николай Павлович',
+    age: 60,
   },
 ];
 
 export default function HistoryPage() {
-  const [searchParams] = useSearchParams();
-  const uid = searchParams.get('uid');
   const [prompts, setPrompts] = useState<SavedPrompt[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [search, setSearch] = useState('');
@@ -83,22 +69,53 @@ export default function HistoryPage() {
 
   useEffect(() => {
     const fetchPrompts = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.warn('Токен отсутствует. Невозможно загрузить историю.');
+        return;
+      }
+  
       try {
-        const response = await axios.get(`/api/saved_prompts/query?uid=${uid}`);
-        const fetched = response.data.saved_prompts.map((item: SavedPrompt, index: number) => ({
-          ...item,
-          full_name: fakeData[index % fakeData.length].full_name,
-          age: fakeData[index % fakeData.length].age,
-        }));
-        setPrompts(fetched);
+        const response = await axios.get('/api/saved_prompts/all', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const fetched = response.data?.saved_prompts ?? [];
+  
+        const enriched = fetched.map((item: any) => {
+          const fio = item.anamnes?.fio || 'ФИО не указано';
+          const birthDate = item.anamnes?.birthday;
+          let age: number | undefined;
+  
+          if (birthDate) {
+            const birth = new Date(birthDate);
+            const now = new Date();
+            age = now.getFullYear() - birth.getFullYear();
+            const hasHadBirthdayThisYear =
+              now.getMonth() > birth.getMonth() ||
+              (now.getMonth() === birth.getMonth() && now.getDate() >= birth.getDate());
+            if (!hasHadBirthdayThisYear) age -= 1;
+          }
+  
+          return {
+            ...item,
+            full_name: fio,
+            age: age ?? 0,
+          };
+        });
+  
+        setPrompts(enriched);
       } catch (error) {
         console.error('Ошибка загрузки истории запросов:', error);
-        setPrompts(fakeData);
       }
     };
-
+  
     fetchPrompts();
-  }, [uid]);
+  }, []);
+  
+  
 
   const filtered = prompts
     .filter(
@@ -126,11 +143,9 @@ export default function HistoryPage() {
 
   const sortIcon = (key: SortKey) => {
     if (key !== sortKey) return <img src={arrowDown} alt="sort" className="inline w-4 h-4 ml-1 opacity-30" />;
-    return sortAsc ? (
-      <img src={arrowUp} alt="asc" className="inline w-4 h-4 ml-1" />
-    ) : (
-      <img src={arrowDown} alt="desc" className="inline w-4 h-4 ml-1" />
-    );
+    return sortAsc
+      ? <img src={arrowUp} alt="asc" className="inline w-4 h-4 ml-1" />
+      : <img src={arrowDown} alt="desc" className="inline w-4 h-4 ml-1" />;
   };
 
   return (
@@ -143,12 +158,14 @@ export default function HistoryPage() {
         <input
           type="text"
           placeholder="Поиск по ФИО, возрасту, дате или типу обследования"
-          className="w-full max-w-3xl mx-auto mb-10 border border-[#9BBBFE] rounded-full px-6 py-3 text-lg focus:ring-4 focus:ring-[#9BBBFE] focus:outline-none"
+          className="w-full max-w-3xl mx-auto mb-20 border-4 border-[#9BBBFE] rounded-full px-6 py-3 text-lg focus:ring-3 focus:ring-[#9BBBFE] focus:outline-none"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <div className="overflow-x-auto w-full">
+
+        <div className="w-full overflow-x-auto sm:overflow-visible">
+
           <table className="w-full text-left">
             <thead className="text-black font-bold text-[18px]">
               <tr>

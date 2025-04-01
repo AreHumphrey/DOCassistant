@@ -18,19 +18,28 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-
+  
     try {
       const response = await axios.post('/api/login', {
         email,
         password,
       });
-
+  
       const { access_token } = response.data;
-
-      // Сохраняем токен с типом Bearer в localStorage (как в старой версии)
+  
       localStorage.setItem('token', access_token);
       localStorage.setItem('token_type', 'Bearer');
-
+  
+      // Получаем профиль, чтобы извлечь uid
+      const profileResponse = await axios.get('/api/profile', {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+  
+      const uid = profileResponse.data.id;
+      localStorage.setItem('uid', uid.toString());
+  
       login(access_token);
       alert('Успешный вход!');
       navigate('/');
@@ -40,6 +49,7 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+  
 
 
   return (
