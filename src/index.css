@@ -68,3 +68,9 @@ html, body {
   overflow-x: hidden;
 }
 
+input:focus {
+  box-shadow: none !important;
+}
+
+
+
