@@ -154,7 +154,7 @@ export default function HistoryPage() {
 
       <main className="flex-grow w-full px-8 py-10">
 
-        <h1 className="text-[50px] font-semibold mb-10 text-black text-left tracking-wider">
+        <h1 className="text-[50px] font-semibold mb-10 text-black text-left tracking-wider sm:tracking-widest font-semibold mb-10 text-black text-left uppercase">
   ЗАПРОСЫ ИИ
 </h1>
 

@@ -88,9 +88,9 @@ export default function PatientsPage() {
       <Header />
 
       <main className="flex-grow w-full px-8 py-10">
-      <h1 className="text-[60px] font-semibold mb-10 text-black text-left tracking-wider">
-  ПАЦИЕНТЫ
-</h1>
+      <h1 className="text-[60px] font-semibold mb-10 text-black text-left tracking-wider sm:tracking-widest font-semibold mb-10 text-black text-left uppercase">
+    ПАЦИЕНТЫ
+    </h1>
 
 
         <input

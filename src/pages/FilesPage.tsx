@@ -1,12 +1,11 @@
-import { useState, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
 import { RootState, AppDispatch } from "@/stores/store";
 import { uploadFile } from "@/stores/filesSlice";
-import { addAnamnes } from "@/stores/anamnesSlice";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -23,6 +22,7 @@ import XlsIcon from '@/images/icon__xls.svg';
 export default function FilesPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { files, error, loading } = useSelector((state: RootState) => state.files);
   const { anamnes } = useSelector((state: RootState) => state.anamnes);
@@ -34,10 +34,38 @@ export default function FilesPage() {
   const [needSave, setNeedSave] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // ✅ Устанавливаем UID и AI в localStorage
+  useEffect(() => {
+    const uidFromRedux = anamnes?.uid;
+    const uidFromUrl = searchParams.get("uid");
+
+    if (!localStorage.getItem("uid") && uidFromRedux) {
+      localStorage.setItem("uid", uidFromRedux);
+    }
+
+    if (!localStorage.getItem("uid") && uidFromUrl) {
+      localStorage.setItem("uid", uidFromUrl);
+    }
+
+    if (!localStorage.getItem("ai")) {
+      localStorage.setItem("ai", "far"); // ← укажи нужное значение: lab, rad, far и т.д.
+    }
+  }, [anamnes]);
+
   const handleContinue = () => {
     const selectedFiles = files.filter((file) => file.isSelected);
     localStorage.setItem("selectedFiles", JSON.stringify(selectedFiles));
-    navigate(`/ai/${localStorage.getItem("ai")}?uid=${localStorage.getItem("uid")}`);
+
+    const uid = localStorage.getItem("uid");
+    const ai = localStorage.getItem("ai");
+
+    if (!uid || !ai) {
+      console.error("UID или AI не указаны. Перенаправление невозможно.");
+      alert("Ошибка: не удалось определить пользователя или раздел назначения.");
+      return;
+    }
+
+    navigate(`/ai/${ai}?uid=${uid}`);
   };
 
   const onDrop = useCallback(
@@ -92,7 +120,7 @@ export default function FilesPage() {
     setNeedSave(false);
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <div className="min-h-screen w-full overflow-x-hidden flex flex-col bg-white">
