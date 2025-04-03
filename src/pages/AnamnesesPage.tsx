@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useDropzone } from "react-dropzone";
@@ -35,6 +35,18 @@ export default function AnamnesesPage() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  useEffect(() => {
+    if (anamnesState) {
+      const fioParts = (anamnesState.fio || '').split(" ");
+      setLastname(fioParts[0] || "");
+      setFio(fioParts[1] || "");
+      setPatronymic(fioParts[2] || "");
+      setBirthday(anamnesState.birthday || "");
+      setScanDate(anamnesState.scan_date || "");
+      setAnamnes(anamnesState.anamnes || "");
+    }
+  }, [anamnesState]);
+
   const isValidDate = (dateStr: string, allowToday = false) => {
     const date = new Date(dateStr);
     const now = new Date();
@@ -54,7 +66,6 @@ export default function AnamnesesPage() {
 
   const handleSubmit = async () => {
     if (!fio && !lastname && !patronymic && !birthday && !scanDate && !anamnes && anamnesState) {
-      // Если данные из файла уже есть, пропускаем ручной ввод
       navigate("/files");
       return;
     }
@@ -115,9 +126,19 @@ export default function AnamnesesPage() {
       })
     )
       .unwrap()
-      .then(() => {
+      .then((parsed) => {
         setUploadStatus("success");
         setShowCard(true);
+
+        if (parsed.fio) {
+          const fioParts = parsed.fio.split(" ");
+          setLastname(fioParts[0] || "");
+          setFio(fioParts[1] || "");
+          setPatronymic(fioParts[2] || "");
+        }
+        setBirthday(parsed.birthday || "");
+        setScanDate(parsed.scan_date || "");
+        setAnamnes(parsed.anamnes || "");
       })
       .catch(() => {
         setUploadStatus("error");
@@ -133,6 +154,7 @@ export default function AnamnesesPage() {
   const handleNext = () => {
     navigate("/files");
   };
+
 
   return (
     <div className="min-h-screen w-screen overflow-x-hidden flex flex-col bg-white">
