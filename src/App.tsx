@@ -27,7 +27,8 @@ function App() {
           <Route path="/saved-prompts" element={<SavedPromptPage />} />
           <Route path="/ai/lab" element={<LabPage />} />
           <Route path="/ai/far" element={<DrugPage />} />
-          <Route path="/ai/rad" element={<HistoryPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/ai/rad" element={<LabPage/>} />
           <Route path="/answer" element={<AnswerPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />

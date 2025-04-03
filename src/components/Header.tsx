@@ -95,7 +95,7 @@ const Header: React.FC = () => {
         </a>
 
           <a
-            href={linkWithUid('/ai/rad')}
+            href={linkWithUid('/history')}
             className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
           >
             История запросов

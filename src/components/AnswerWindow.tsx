@@ -66,36 +66,35 @@ export default function AnswerWindow({ uid, pid }: AnswerWindowProps) {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col p-4 border-[3px] border-[#ADC9FC] rounded-lg">
+    <div className="w-full px-2 sm:px-6 flex flex-col p-4 border-[3px] border-[#367DFF] rounded-lg">
       <div className="flex flex-wrap gap-3 mb-4">
-      <button
-  onClick={copyToClipboard}
-  disabled={loading}
-        className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
-             transition hover:ring-2 hover:ring-[#0A57FF]  hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
-             focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
+        <button
+          onClick={copyToClipboard}
+          disabled={loading}
+          className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
+            transition hover:ring-2 hover:ring-[#0A57FF]  hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
+            focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
         >
-        Копировать
+          Копировать
         </button>
         <button
-        onClick={printPDF}
-        disabled={loading}
-        className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
-             transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
-             focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
+          onClick={printPDF}
+          disabled={loading}
+          className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
+            transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
+            focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
         >
-        Печать
+          Печать
         </button>
         <button
-        onClick={generatePDF}
-        disabled={loading}
-        className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
-             transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
-             focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
+          onClick={generatePDF}
+          disabled={loading}
+          className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
+            transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
+            focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
         >
-        PDF
+          PDF
         </button>
-
       </div>
 
       {loading ? (
