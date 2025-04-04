@@ -13,6 +13,7 @@ import ProfilePage from './pages/ProfilePage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import NewPasswordPage from './pages/NewPasswordPage'
 import HistoryPage from './pages/HistoryPage'
+import HelpPage from './pages/HelpPage'
 import PatientsPage from './pages/PatientsPage'
 
 function App() {
@@ -25,10 +26,17 @@ function App() {
           <Route path="/med" element={<AnamnesesPage />} />
           <Route path="/files" element={<FilesPage />} />
           <Route path="/saved-prompts" element={<SavedPromptPage />} />
+
+
+          <Route path="/ai/rad" element={<LabPage/>} />
           <Route path="/ai/lab" element={<LabPage />} />
           <Route path="/ai/far" element={<DrugPage />} />
+          <Route path="/ai/car" element={<DrugPage />} />
+          <Route path="/ai/ask_now" element={<DrugPage />} />
+
           <Route path="/history" element={<HistoryPage />} />
-          <Route path="/ai/rad" element={<LabPage/>} />
+
+          <Route path="/help" element={<HelpPage/>} />
           <Route path="/answer" element={<AnswerPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
