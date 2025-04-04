@@ -101,7 +101,7 @@ const Header: React.FC = () => {
             История запросов
           </a>
           <a
-            href={linkWithUid('/ai/far')}
+            href={linkWithUid('/help')}
             className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
           >
             Контакты
@@ -119,7 +119,7 @@ const Header: React.FC = () => {
           <div
             className="cursor-pointer transition-all duration-200 translate-y-1.5 translate-x-2 active:brightness-90"
           >
-            <a href="/help" target="_blank" rel="noopener noreferrer">
+            <a href="/" target="_blank" rel="noopener noreferrer">
               <img
                 src={HelpIcon}
                 alt="Тех помощь"

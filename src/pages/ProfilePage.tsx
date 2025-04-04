@@ -84,50 +84,40 @@ export default function ProfilePage() {
         <div className="bg-[#61A4FA] bg-opacity-90 p-10 rounded-3xl shadow-lg w-full max-w-3xl text-white text-center border-t-4 border-white">
 
           {/* Состояния загрузки или ошибок */}
+          <div className="bg-white border-[3px] border-[#367DFF] p-10 rounded-3xl w-full max-w-3xl text-black text-center">
           {loading && <p className="text-lg text-center">Загрузка данных...</p>}
-          {error && <p className="text-red-500 text-lg text-center">{error}</p>}
+  {error && <p className="text-red-500 text-lg text-center">{error}</p>}
 
-          {/* Данные профиля */}
-          {userProfile && (
-            <div className="space-y-6 text-left divide-y divide-white/50">
-              <div className="py-3">
-                <span className="block text-sm uppercase tracking-wide text-white/70">
-                  Имя
-                </span>
-                <span className="block text-lg font-bold">{userProfile.first_name}</span>
-              </div>
+  {userProfile && (
+    <div className="text-left">
+      <div className="py-3 border-b-[3px] border-[#367DFF]">
+        <span className="block text-sm uppercase tracking-wide text-gray-500">Имя</span>
+        <span className="block text-lg font-semibold">{userProfile.first_name}</span>
+      </div>
 
-              <div className="py-3">
-                <span className="block text-sm uppercase tracking-wide text-white/70">
-                  Фамилия
-                </span>
-                <span className="block text-lg font-bold">{userProfile.last_name}</span>
-              </div>
+      <div className="py-3 border-b-[3px] border-[#367DFF]">
+        <span className="block text-sm uppercase tracking-wide text-gray-500">Фамилия</span>
+        <span className="block text-lg font-semibold">{userProfile.last_name}</span>
+      </div>
 
-              <div className="py-3">
-                <span className="block text-sm uppercase tracking-wide text-white/70">
-                  Отчество
-                </span>
-                <span className="block text-lg font-bold">{userProfile.middle_name}</span>
-              </div>
+      <div className="py-3 border-b-[3px] border-[#367DFF]">
+        <span className="block text-sm uppercase tracking-wide text-gray-500">Отчество</span>
+        <span className="block text-lg font-semibold">{userProfile.middle_name}</span>
+      </div>
 
-              <div className="py-3">
-                <span className="block text-sm uppercase tracking-wide text-white/70">
-                  E-mail
-                </span>
-                <span className="block text-lg font-bold">{userProfile.email}</span>
-              </div>
+      <div className="py-3 border-b-[3px] border-[#367DFF]">
+        <span className="block text-sm uppercase tracking-wide text-gray-500">E-mail</span>
+        <span className="block text-lg font-semibold">{userProfile.email}</span>
+      </div>
 
-              <div className="py-3">
-                <span className="block text-sm uppercase tracking-wide text-white/70">
-                  Клиника
-                </span>
-                <span className="block text-lg font-bold">{userProfile.origin_name}</span>
-              </div>
+      <div className="py-3">
+        <span className="block text-sm uppercase tracking-wide text-gray-500">Клиника</span>
+        <span className="block text-lg font-semibold">{userProfile.origin_name}</span>
+      </div>
+    </div>
+  )}
+</div>
 
-           
-            </div>
-          )}
         </div>
       </div>
 
