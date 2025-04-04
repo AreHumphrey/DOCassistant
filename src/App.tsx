@@ -14,6 +14,8 @@ import ResetPasswordPage from './pages/ResetPasswordPage'
 import NewPasswordPage from './pages/NewPasswordPage'
 import HistoryPage from './pages/HistoryPage'
 import PatientsPage from './pages/PatientsPage'
+import RadPage from './pages/RadPage'
+import CarPage from './pages/CarPage'
 
 function App() {
   return (
@@ -28,7 +30,8 @@ function App() {
           <Route path="/ai/lab" element={<LabPage />} />
           <Route path="/ai/far" element={<DrugPage />} />
           <Route path="/history" element={<HistoryPage />} />
-          <Route path="/ai/rad" element={<LabPage/>} />
+          <Route path="/ai/rad" element={<RadPage/>} />
+          <Route path="/ai/car" element={<CarPage/>} />
           <Route path="/answer" element={<AnswerPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
