@@ -44,19 +44,18 @@ export default function AnamnesProfile() {
       {error && <p className="text-red-600 mt-4">Ошибка: {error}</p>}
 
       {anamnes && (
-        <div className="w-full py-6 px-4 sm:px-6 mb-10 text-black">
+        <div className="w-full py-6 px-4 sm:px-6 mb-10 text-black max-w-6xl">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-            {/* Левая часть: UID и данные */}
             <div className="text-left w-full">
-              <span className="text-[40px] sm:text-[56px] font-extrabold break-all block mb-3">
+              <span className="text-[40px] sm:text-[64px] font-extrabold break-all block mb-4">
                 {anamnes.uid}
               </span>
-              <div className="text-[20px] sm:text-[22px] font-normal leading-snug break-words">
+              <div className="text-[20px] sm:text-[24px] font-normal leading-snug break-words">
                 <p className="mb-4">
                   {anamnes.fio} / {anamnes.birthday.split("-")[0]} / {calculateAge(anamnes.birthday)} лет
                 </p>
                 {!isEditing ? (
-                  <p className="text-black text-[18px] sm:text-[20px] break-words">
+                  <p className="text-black text-[18px] sm:text-[22px] break-words">
                     {anamnes.anamnes || "—"}
                   </p>
                 ) : (
@@ -69,21 +68,8 @@ export default function AnamnesProfile() {
                 )}
               </div>
             </div>
-
-            {/* Кнопка "Изменить" */}
-            {!isEditing && (
-              <div className="flex-shrink-0 flex items-center ml-0 sm:ml-12">
-                <button
-                  onClick={handleEditClick}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-full text-[16px] font-semibold hover:bg-blue-700"
-                >
-                  Изменить
-                </button>
-              </div>
-            )}
           </div>
 
-          {/* Кнопки редактирования */}
           {isEditing && (
             <div className="mt-6 flex gap-4">
               <button

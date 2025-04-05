@@ -1,49 +1,55 @@
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-
 import { AppDispatch } from "@/stores/store";
 import { useDispatch } from "react-redux";
 import { getAnamnesFromFile } from "@/stores/anamnesSlice";
 
 export default function AnamnesUpload() {
-    const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
-    const dispatch = useDispatch<AppDispatch>();
-    
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-        const file = acceptedFiles[0]; // Берём первый файл из массива
-        if (!file) return;
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    if (!file) return;
 
-        setUploadProgress(0); // Сбрасываем прогресс перед загрузкой
-
-        // Отправка файла на сервер
-        dispatch(
-            getAnamnesFromFile({
-              file,
-              onProgress: (progress) => setUploadProgress(progress),
-            })
-        );
-    }, []);
-
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-    return (
-        <div
-            {...getRootProps({
-                className: `border-dashed border-2 rounded-full p-6 
-                flex flex-col items-center justify-center 
-                ${isDragActive ? "bg-blue-50 border-blue-400" : "bg-gray-100 border-gray-300"}`
-            })}
-        >
-            <input {...getInputProps()} />
-            <p className="text-gray-600 text-center">
-                Перетащите сюда файлы с историей болезни пациента
-            </p>
-            {uploadProgress !== null ? (
-                <p className="text-blue-600 mt-2">Загружено {uploadProgress}%</p>
-            ) : (
-                <p className="text-blue-600 mt-2">Загружено 0%</p>
-            )}
-        </div>
+    setUploadProgress(0);
+    dispatch(
+      getAnamnesFromFile({
+        file,
+        onProgress: (progress) => setUploadProgress(progress),
+      })
     );
+  }, [dispatch]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+
+    <div className="flex justify-end w-full px-4">
+    <div
+      {...getRootProps({
+        className: `
+          bg-[#D9E9FF] rounded-2xl px-5 py-3
+          flex items-center justify-center
+          w-[160px] h-[220px] sm:w-[360px] sm:h-[140px]
+          cursor-pointer transition
+        `,
+      })}
+    >
+      <input {...getInputProps()} />
+      <div className="text-left w-full max-w-[220px] sm:max-w-[280px]">
+        <p className="text-black text-[14px] font-medium leading-[1.4]">
+          Перетащите сюда дополнительные<br />
+          файлы для пополнения данных<br />
+          карточки пациента<br />
+          в формате: PDF, DOC, TXT, XLS.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+
+
+  );
+  
 }

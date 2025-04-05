@@ -15,6 +15,9 @@ import NewPasswordPage from './pages/NewPasswordPage'
 import HistoryPage from './pages/HistoryPage'
 import HelpPage from './pages/HelpPage'
 import PatientsPage from './pages/PatientsPage'
+import CarPage from './pages/CarPage'
+import RadPage from './pages/RadPage'
+
 
 function App() {
   return (
@@ -28,10 +31,11 @@ function App() {
           <Route path="/saved-prompts" element={<SavedPromptPage />} />
 
 
-          <Route path="/ai/rad" element={<LabPage/>} />
+          <Route path="/ai/rad" element={<RadPage/>} />
+          <Route path="/ai/car" element={<CarPage/>} />
+
           <Route path="/ai/lab" element={<LabPage />} />
           <Route path="/ai/far" element={<DrugPage />} />
-          <Route path="/ai/car" element={<DrugPage />} />
           <Route path="/ai/ask_now" element={<DrugPage />} />
 
           <Route path="/history" element={<HistoryPage />} />
@@ -42,6 +46,10 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/reset-password/:token" element={<NewPasswordPage />} />
           <Route path="/patients" element={<PatientsPage />} />
+
+
+
+
 
         </Routes>
       </AuthProvider>
