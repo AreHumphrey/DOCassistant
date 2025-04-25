@@ -15,57 +15,76 @@ import { AppDispatch, RootState } from "@/stores/store";
 import { useDispatch, useSelector } from "react-redux";
 import { loadFromStorage } from "@/stores/filesSlice";
 
-export default function RadPage() {
-    const [purpose, setPurpose] = useState("")
-    const navigate = useNavigate()
+export default function LabPage() {
+  const purpose = "LAB"; 
+  const navigate = useNavigate();
 
-    const { requireAuth } = useAuth();
+  const { requireAuth } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
+  const { files } = useSelector((state: RootState) => state.files);
+  const { prompt, thread_id, answer, saved_prompt_id } = useSelector((state: RootState) => state.ai);
+  const { anamnes } = useSelector((state: RootState) => state.anamnes);
 
-    const dispatch = useDispatch<AppDispatch>();
-    const { files } = useSelector((state: RootState) => state.files);
-    const { prompt, thread_id, answer, saved_prompt_id } = useSelector((state: RootState) => state.ai)
-    const { anamnes } = useSelector((state: RootState) => state.anamnes)
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedIndexes, setSelectedIndexes] = useState<number[]>(files.map((_, i) => i));
+  const [localSelection, setLocalSelection] = useState<Record<number, boolean>>({});
 
-    const [feedbackOpen, setFeedbackOpen] = useState<boolean>(false)
-    const [isEditMode, setIsEditMode] = useState<boolean>(false)
-    const [selectedIndexes, setSelectedIndexes] = useState<number[]>(files.map((_, i) => i))
+  useEffect(() => {
+      requireAuth();
+  }, [requireAuth]);
 
-    useEffect(() => {
-        requireAuth();
-    }, [requireAuth]);
+  useEffect(() => {
+      dispatch(loadFromStorage());
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(loadFromStorage())
-    }, [])
+  useEffect(() => {
+      const defaultSelection: Record<number, boolean> = {};
+      files.forEach((_, i) => {
+          defaultSelection[i] = true;
+      });
+      setLocalSelection(defaultSelection);
+  }, [files]);
 
-    const handleGenerate = async () => {
-        const filenames = files
-        .filter((_, index) => selectedIndexes.includes(index))
-        .map((file) => file.servername)
-        const uid = anamnes !== undefined && anamnes ? anamnes.uid : "" 
+  const handleGenerate = async () => {
+      const filenames = files
+          .filter((_, index) => localSelection[index])
+          .map((file) => file.servername);
 
-        if (!thread_id) {
-            dispatch(generateAssistant({uid: uid!, filenames: filenames, prompt: prompt!, purpose: purpose}))
-        }
-        else {
-            dispatch(continueAssistant({uid: uid!, filenames: filenames, prompt: prompt!, purpose: purpose, thread_id: thread_id}))
-        }
-    }
+      const uid = anamnes?.uid || "";
 
-    const handelContinue = () => {
-        localStorage.setItem("answer", answer)
-        localStorage.setItem("pid", saved_prompt_id ? saved_prompt_id.toString() : "")
-        localStorage.setItem("anamnes", anamnes ? JSON.stringify(anamnes) : "")
-        navigate("/answer")
-    }
+      if (!prompt) {
+          alert("Введите запрос перед отправкой.");
+          return;
+      }
 
-    const toggleSelection = (index: number) => {
-        if (selectedIndexes.includes(index)) {
-            setSelectedIndexes(selectedIndexes.filter((i) => i !== index))
-        } else {
-            setSelectedIndexes([...selectedIndexes, index])
-        }
-    }
+      if (filenames.length === 0) {
+          alert("Выберите хотя бы один файл для отправки.");
+          return;
+      }
+
+      try {
+          if (!thread_id) {
+              await dispatch(generateAssistant({ uid, filenames, prompt, purpose }));
+          } else {
+              await dispatch(continueAssistant({ uid, filenames, prompt, purpose, thread_id }));
+          }
+      } catch (error) {
+          console.error("Ошибка при отправке запроса:", error);
+          alert("Произошла ошибка на сервере. Пожалуйста, попробуйте позже.");
+      }
+  };
+
+  const handelContinue = () => {
+      localStorage.setItem("answer", answer);
+      localStorage.setItem("pid", saved_prompt_id ? saved_prompt_id.toString() : "");
+      localStorage.setItem("anamnes", anamnes ? JSON.stringify(anamnes) : "");
+      navigate("/answer");
+  };
+
+  const toggleSelection = (index: number) => {
+      setLocalSelection((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
     return (
         <div>

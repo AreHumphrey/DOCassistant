@@ -34,7 +34,6 @@ export default function FilesPage() {
   const [needSave, setNeedSave] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // ✅ Устанавливаем UID и AI в localStorage
   useEffect(() => {
     const uidFromRedux = anamnes?.uid;
     const uidFromUrl = searchParams.get("uid");
@@ -48,9 +47,18 @@ export default function FilesPage() {
     }
 
     if (!localStorage.getItem("ai")) {
-      localStorage.setItem("ai", "far"); // ← укажи нужное значение: lab, rad, far и т.д.
+      localStorage.setItem("ai", "far");
     }
   }, [anamnes]);
+
+  // ✅ Редирект если ai === 'far' или 'ans'
+  useEffect(() => {
+    const ai = localStorage.getItem("ai");
+    const uid = localStorage.getItem("uid");
+    if ((ai === "far" || ai === "ans") && uid) {
+      navigate(`/ai/${ai}?uid=${uid}`);
+    }
+  }, []);
 
   const handleContinue = () => {
     const selectedFiles = files.filter((file) => file.isSelected);
