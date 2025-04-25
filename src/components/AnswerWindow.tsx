@@ -66,8 +66,10 @@ export default function AnswerWindow({ uid, pid }: AnswerWindowProps) {
   };
 
   return (
-    <div className="w-full px-2 sm:px-6 flex flex-col p-4 border-[3px] border-[#367DFF] rounded-lg">
-      <div className="flex flex-wrap gap-3 mb-4">
+    <div className="w-full px-2 sm:px-6 flex flex-col p-4 rounded-lg bg-[#F4F4F4]">
+      <h2 className="text-2xl px-10 font-semibold text-gray-800 mt-4 mb-2">ОТВЕТ ИИ:</h2>
+
+      <div className="flex flex-wrap gap-3 mb-4 px-10">
         <button
           onClick={copyToClipboard}
           disabled={loading}
@@ -98,11 +100,11 @@ export default function AnswerWindow({ uid, pid }: AnswerWindowProps) {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center h-44">
+        <div className="flex justify-center items-center min-h-[280px]">
           <div className="w-8 h-8 border-4 border-blue-500 border-solid rounded-full animate-spin border-t-transparent"></div>
         </div>
       ) : (
-        <div className="w-full p-4 bg-white border rounded-lg h-44 overflow-y-auto text-left text-black">
+        <div className="w-full px-10 p-4 bg-[#F4F4F4] rounded-lg min-h-[280px] overflow-y-auto text-left text-black">
           <ReactMarkdown>{answer}</ReactMarkdown>
         </div>
       )}

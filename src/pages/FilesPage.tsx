@@ -51,7 +51,7 @@ export default function FilesPage() {
     }
   }, [anamnes]);
 
-  // ✅ Редирект если ai === 'far' или 'ans'
+
   useEffect(() => {
     const ai = localStorage.getItem("ai");
     const uid = localStorage.getItem("uid");

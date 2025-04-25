@@ -17,6 +17,7 @@ interface UserProfile {
 const Header: React.FC = () => {
   const [searchParams] = useSearchParams();
   
+  
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [uid, setUid] = useState<string | undefined>(() => {
     return searchParams.get('uid') || localStorage.getItem('uid') || undefined;
@@ -100,12 +101,12 @@ const Header: React.FC = () => {
           >
             История запросов
           </a>
-          <a
+          {/* <a
             href={linkWithUid('/help')}
             className="text-[#000000] hover:text-red-500 active:text-red-500 transition duration-300"
           >
             Контакты
-          </a>
+          </a> */}
         </nav>
 
         <div className="flex flex-col items-center sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0 sm:-translate-x-[30px]">
@@ -119,7 +120,7 @@ const Header: React.FC = () => {
           <div
             className="cursor-pointer transition-all duration-200 translate-y-1.5 translate-x-2 active:brightness-90"
           >
-            <a href="/answer" target="_blank" rel="noopener noreferrer">
+            <a href="/help" target="_blank" rel="noopener noreferrer">
               <img
                 src={HelpIcon}
                 alt="Тех помощь"
