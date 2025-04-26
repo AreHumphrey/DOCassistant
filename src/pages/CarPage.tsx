@@ -17,100 +17,180 @@ import { loadFromStorage } from "@/stores/filesSlice";
 import ChoosePurpose from "@/components/ChoosePurpose";
 
 export default function CarPage() {
-    const [purpose, setPurpose] = useState("")
-    const navigate = useNavigate()
+  const [purpose, setPurpose] = useState("");
+  const navigate = useNavigate();
+  const { requireAuth } = useAuth();
+  const dispatch = useDispatch<AppDispatch>();
 
-    const { requireAuth } = useAuth();
+  const { files } = useSelector((state: RootState) => state.files);
+  const { prompt, thread_id, answer, saved_prompt_id } = useSelector((state: RootState) => state.ai);
+  const { anamnes } = useSelector((state: RootState) => state.anamnes);
 
-    const dispatch = useDispatch<AppDispatch>();
-    const { files } = useSelector((state: RootState) => state.files);
-    const { prompt, thread_id, answer, saved_prompt_id } = useSelector((state: RootState) => state.ai)
-    const { anamnes } = useSelector((state: RootState) => state.anamnes)
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [localSelection, setLocalSelection] = useState<Record<number, boolean>>({});
+  const [showPrompt, setShowPrompt] = useState(true);
 
-    const [feedbackOpen, setFeedbackOpen] = useState<boolean>(false)
+  useEffect(() => {
+    requireAuth();
+  }, [requireAuth]);
 
-    useEffect(() => {
-        requireAuth();
-    }, [requireAuth]);
+  useEffect(() => {
+    dispatch(loadFromStorage());
+  }, [dispatch]);
 
-    useEffect(() => {
-        dispatch(loadFromStorage())
-    }, [])
+  useEffect(() => {
+    const defaultSelection: Record<number, boolean> = {};
+    files.forEach((_, i) => {
+      defaultSelection[i] = true;
+    });
+    setLocalSelection(defaultSelection);
+  }, [files]);
 
-    const handleGenerate = async () => {
-        const filenames = files
-        .filter((file) => file.isSelected)
-        .map((file) => file.servername)
-        const uid = anamnes !== undefined && anamnes ? anamnes.uid : "" 
+  const handleGenerate = async () => {
+    const filenames = files
+      .filter((file, index) => localSelection[index])
+      .map((file) => file.servername);
 
-        if (!thread_id) {
-            dispatch(generateAssistant({uid: uid!, filenames: filenames, prompt: prompt!, purpose: purpose}))
-        }
-        else {
-            dispatch(continueAssistant({uid: uid!, filenames: filenames, prompt: prompt!, purpose: purpose, thread_id: thread_id}))
-        }
+    const uid = anamnes?.uid || "";
+
+    if (!prompt) {
+      alert("Введите запрос перед отправкой.");
+      return;
     }
 
-    const handelContinue = () => {
-        localStorage.setItem("answer", answer)
-        localStorage.setItem("pid", saved_prompt_id ? saved_prompt_id.toString() : "")
-        localStorage.setItem("anamnes", anamnes ? JSON.stringify(anamnes) : "")
-        navigate("/answer")
+    if (filenames.length === 0) {
+      alert("Выберите хотя бы один файл для отправки.");
+      return;
     }
 
-    return (
-        <div>
-            <Header />
-            <div className="flex flex-col gap-4 p-8">
-                <div className="flex flex-row justify-around">
-                    <AnamnesProfile />
-                    <AnamnesUpload />
-                </div>
+    try {
+      if (!thread_id) {
+        await dispatch(generateAssistant({ uid, filenames, prompt, purpose }));
+      } else {
+        await dispatch(continueAssistant({ uid, filenames, prompt, purpose, thread_id }));
+      }
+      setShowPrompt(false);
+    } catch (error) {
+      console.error("Ошибка при отправке запроса:", error);
+      alert("Произошла ошибка на сервере. Пожалуйста, попробуйте позже.");
+    }
+  };
 
-                {/* Галерея загруженных файлов */}
-                <div className="bg-gray-100 rounded-2xl p-4">
-                    <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold text-gray-800">Загруженные снимки:</h2>
-                        <div className="flex gap-6 text-sm font-semibold text-blue-600">
-                            <button className="hover:underline">ИЗМЕНИТЬ НАБОР СНИМКОВ</button>
-                            <button className="hover:underline">СОХРАНИТЬ</button>
-                        </div>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg overflow-y-auto max-h-[360px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
-                        <div className="grid grid-cols-5 gap-3">
-                            {files.length === 0 ? (
-                                <p className="text-gray-600 col-span-5">Нет файлов</p>
-                            ) : (
-                                files.map((file, index) => (
-                                    <div key={index} className="w-full aspect-video bg-gray-200 rounded overflow-hidden shadow-sm flex items-center justify-center">
-                                        <img
-                                          src={file.fileUrl}
-                                          alt="Снимок"
-                                          className="object-cover w-full h-full"
-                                        />
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </div>
-                </div>
+  const handleContinue = () => {
+    localStorage.setItem("answer", answer);
+    localStorage.setItem("pid", saved_prompt_id ? saved_prompt_id.toString() : "");
+    localStorage.setItem("anamnes", anamnes ? JSON.stringify(anamnes) : "");
+    navigate("/answer");
+  };
 
-                <PromptWindow />
-                <ChoosePurpose type="CAR" setPurpose={setPurpose} />
-                <div className="flex flex-col flex-grow gap-4">
-                    <AnswerWindow 
-                    uid={anamnes !== undefined && anamnes ? anamnes.uid : ""}
-                    pid={saved_prompt_id}/>
-                    <button onClick={() => handleGenerate()}>Отправить</button>
-                    <button onClick={() => setFeedbackOpen(true)}>Оставить отзыв</button>
-                </div>
-                <button 
-                className="w-36 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-                onClick={() => handelContinue()}
-                >Далее
-                </button>
-            </div>
-            <FeedbackWindow isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} purpose={purpose} />
+  const toggleSelection = (index: number) => {
+    setLocalSelection((prev) => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="flex flex-col gap-4 py-8 px-0">
+        {/* Карточка пациента и загрузка файлов */}
+        <div className="flex flex-row justify-around px-6">
+          <AnamnesProfile />
+          <AnamnesUpload />
         </div>
-    )
+
+        {/* Ответ ИИ */}
+        {answer && (
+          <div className="w-full">
+            <AnswerWindow uid={anamnes?.uid ?? ""} pid={saved_prompt_id} />
+            <div className="w-full px-10 mt-4">
+              <button
+                onClick={() => setFeedbackOpen(true)}
+                className="bg-[#0A57FF] text-white text-sm font-semibold pl-6 pr-10 py-3 rounded-full shadow-md hover:bg-[#084fd6] transition w-[320px] text-left"
+              >
+                Оставить отзыв
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Загруженные файлы */}
+        <div className="w-full px-10">
+          <h2 className="text-2xl font-semibold text-gray-800 mt-4 mb-2">Загруженные снимки:</h2>
+          <div className="bg-gray-100 rounded-2xl p-4">
+            <div className="flex justify-between items-center mb-2 px-2">
+              <span
+                className="text-sm font-semibold text-blue-600 cursor-pointer hover:underline"
+                onClick={() => setIsEditMode(!isEditMode)}
+              >
+                ИЗМЕНИТЬ НАБОР СНИМКОВ
+              </span>
+              <span
+                className="text-sm font-semibold text-blue-600 cursor-pointer hover:underline"
+                onClick={() => setIsEditMode(false)}
+              >
+                СОХРАНИТЬ
+              </span>
+            </div>
+          </div>
+
+          <div className="p-4 bg-gray-100 rounded-lg overflow-y-auto max-h-[360px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+            <div className="grid grid-cols-5 gap-3">
+              {files.map((file, index) => {
+                const isSelected = localSelection[index];
+                if (!isSelected && !isEditMode) return null;
+                return (
+                  <div
+                    key={index}
+                    onClick={() => isEditMode && toggleSelection(index)}
+                    className={`relative w-full aspect-video bg-gray-200 rounded overflow-hidden shadow-sm flex items-center justify-center cursor-pointer ${isEditMode ? 'hover:opacity-70' : ''} ${isEditMode && isSelected ? 'border-4 border-blue-500' : ''}`}
+                  >
+                    <img
+                      src={file.fileUrl}
+                      alt="Снимок"
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Окно ввода запроса и выбор цели */}
+        {showPrompt && (
+          <>
+            <PromptWindow />
+            <ChoosePurpose type="CAR" setPurpose={setPurpose} />
+            <div className="w-full flex justify-start px-10">
+              <button
+                onClick={handleGenerate}
+                className="bg-[#0A57FF] text-white text-sm font-semibold pl-6 pr-10 py-3 rounded-full shadow-md hover:bg-[#084fd6] transition w-[320px] text-left"
+              >
+                ОТПРАВИТЬ ЗАПРОС ИИ
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Кнопка Далее */}
+        <div className="w-full flex justify-start px-10">
+          <button
+            onClick={handleContinue}
+            className="w-36 mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Далее
+          </button>
+        </div>
+      </div>
+
+      <FeedbackWindow
+        isOpen={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+        purpose={purpose}
+      />
+    </div>
+  );
 }

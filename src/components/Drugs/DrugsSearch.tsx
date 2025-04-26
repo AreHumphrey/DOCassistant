@@ -68,9 +68,10 @@ export default function DrugsSearch() {
 
   return (
     <div className="relative w-full">
+       <h2 className="text-2xl font-semibold text-gray-800 mt-4 mb-6 px-10">Введите название препарата</h2>
       <div className="flex flex-row gap-3 shadow-none ring-0 outline-none border-none after:shadow-none before:shadow-none">
 
-
+     
             <input
         ref={inputRef}
         type="text"
