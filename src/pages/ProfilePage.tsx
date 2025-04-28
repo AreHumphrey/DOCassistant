@@ -57,6 +57,12 @@ export default function ProfilePage() {
     <div className="h-screen w-full flex flex-col bg-gradient-to-b  overflow-x-hidden">
       <Header />
 
+      <Breadcrumbs
+              items={[
+                { label: "Профиль" }
+              ]}
+      />
+
       {/* ПК ВЕРСИЯ - ГОРИЗОНТАЛЬНАЯ РАЗМЕТКА */}
       <div className="flex-grow flex flex-col sm:flex-row items-center justify-center px-4 mt-[5%] sm:mb-[10%]">
 

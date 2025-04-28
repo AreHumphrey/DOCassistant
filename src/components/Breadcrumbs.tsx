@@ -17,9 +17,9 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
       <span className="text-[#FF0000]">/</span>
 
       {items.map((item, index) => (
-        <div key={index} className="flex items-center space-x-1">
+        <div key={index} className=" flex items-center space-x-1">
           {item.path ? (
-            <Link to={item.path} className="hover:underline">
+            <Link to={item.path} className="text-gray-800 hover:underline hover:text-[#0A57FF]">
               {item.label}
             </Link>
           ) : (
