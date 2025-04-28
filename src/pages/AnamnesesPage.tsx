@@ -259,78 +259,95 @@ export default function AnamnesesPage() {
         </div>
 
         {/* Поля формы */}
-        <section className="w-full max-w-5xl bg-white px-2">
-          <p className="text-lg font-semibold text-black mb-2">Создание карточки пациента</p>
-          <h2 className="text-4xl font-extrabold mb-10 text-black">Данные пациента</h2>
+        {/* Поля формы */}
+<section className="w-full max-w-5xl bg-white px-2">
+  <p className="text-lg font-semibold text-black mb-2">Создание карточки пациента</p>
+  <h2 className="text-4xl font-extrabold mb-10 text-black">Данные пациента</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 w-full">
-            <input placeholder="Имя" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={fio} onChange={(e) => setFio(e.target.value)} />
-            <input placeholder="Фамилия" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={lastname} onChange={(e) => setLastname(e.target.value)} />
-            <input placeholder="Отчество" className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full" value={patronymic} onChange={(e) => setPatronymic(e.target.value)} />
-          </div>
+  <div className="flex flex-wrap gap-6 mb-6 w-full">
+    <input
+      placeholder="Имя"
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={fio}
+      onChange={(e) => setFio(e.target.value)}
+    />
+    <input
+      placeholder="Фамилия"
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={lastname}
+      onChange={(e) => setLastname(e.target.value)}
+    />
+    <input
+      placeholder="Отчество"
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={patronymic}
+      onChange={(e) => setPatronymic(e.target.value)}
+    />
+    <input
+      type="text"
+      placeholder="Дата рождения"
+      onFocus={(e) => (e.target.type = "date")}
+      onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={birthday}
+      onChange={(e) => setBirthday(e.target.value)}
+    />
+    <input
+      type="text"
+      placeholder="Дата снимка"
+      onFocus={(e) => (e.target.type = "date")}
+      onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={scanDate}
+      onChange={(e) => setScanDate(e.target.value)}
+    />
+    <input
+      placeholder="Заметки"
+      className="flex-1 min-w-[250px] rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black"
+      value={anamnes}
+      onChange={(e) => setAnamnes(e.target.value)}
+    />
+  </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 w-full">
-            <input
-              type="text"
-              placeholder="Дата рождения"
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
-              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Дата снимка"
-              onFocus={(e) => (e.target.type = "date")}
-              onBlur={(e) => e.target.value === "" && (e.target.type = "text")}
-              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
-              value={scanDate}
-              onChange={(e) => setScanDate(e.target.value)}
-            />
-          </div>
+  {error && <p className="text-red-500 text-xl mb-4">{error}</p>}
 
-          <div className="grid grid-cols-1 gap-6 mb-6 w-full">
-            <input
-              placeholder="Заметки"
-              className="rounded-full border-[2.5px] border-blue-500 px-6 py-3 text-black font-bold placeholder-black w-full"
-              value={anamnes}
-              onChange={(e) => setAnamnes(e.target.value)}
-            />
-          </div>
+  <div className="flex justify-start">
+    <button
+      className="bg-blue-600 text-white py-3 px-10 w-full md:w-[300px] rounded-full text-lg font-medium hover:bg-blue-700 text-left"
+      onClick={handleSubmit}
+      disabled={loading}
+    >
+      {loading ? "Сохранение..." : "Создать"}
+    </button>
+  </div>
 
-          {error && <p className="text-red-500 text-xl mb-4">{error}</p>}
+  {showCard && anamnesState && (
+    <div className="mt-10 w-full flex flex-col items-center">
+      <div className="border-[2.5px] border-blue-500 bg-white rounded-[24px] px-10 py-8 text-left text-black w-full max-w-3xl bg-blue-100">
+        <p className="text-xl font-bold mb-2">{anamnesState.fio}</p>
+        <p className="text-md mb-1">Дата рождения: {anamnesState.birthday}</p>
+        <p className="text-md mb-1">Дата снимка: {anamnesState.scan_date}</p>
+        <p className="text-md mb-2">Заметки: {anamnesState.anamnes}</p>
+        <button
+          onClick={handleDelete}
+          className="mt-4 bg-[#FE7678] text-white px-6 py-2 rounded-full text-sm font-semibold hover:opacity-90"
+        >
+          Удалить
+        </button>
+      </div>
 
-          <div className="flex justify-start">
-            <button
-              className="bg-blue-600 text-white py-3 px-10 w-full md:w-[300px] rounded-full text-lg font-medium hover:bg-blue-700 text-left"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? "Сохранение..." : "Создать"}
-            </button>
-          </div>
+      <button
+        onClick={handleNext}
+        className="mt-6 bg-[#0A57FF] text-white py-3 px-12 rounded-full text-lg font-semibold hover:bg-blue-700"
+      >
+        Далее
+      </button>
+    </div>
+  )}
 
-           {showCard && anamnesState && (
-            <div className="mt-10 w-full flex flex-col items-center">
-              <div className="border-[2.5px] border-blue-500 bg-white rounded-[24px] px-10 py-8 text-left text-black w-full max-w-3xl bg-blue-100">
-                <p className="text-xl font-bold mb-2">{anamnesState.fio}</p>
-                <p className="text-md mb-1">Дата рождения: {anamnesState.birthday}</p>
-                <p className="text-md mb-1">Дата снимка: {anamnesState.scan_date}</p>
-                <p className="text-md mb-2">Заметки: {anamnesState.anamnes}</p>
-                <button onClick={handleDelete} className="mt-4 bg-[#FE7678] text-white px-6 py-2 rounded-full text-sm font-semibold hover:opacity-90">
-                  Удалить
-                </button>
-              </div>
+  <div className="mt-24"></div>
+</section>
 
-              <button onClick={handleNext} className="mt-6 bg-[#0A57FF] text-white py-3 px-12 rounded-full text-lg font-semibold hover:bg-blue-700">
-                Далее
-              </button>
-            </div>
-          )}
-
-          <div className="mt-24"></div>
-        </section>
       </main>
 
       <Footer />

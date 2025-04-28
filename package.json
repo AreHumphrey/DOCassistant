@@ -14,6 +14,8 @@
     "@cornerstonejs/dicom-image-loader": "^2.4.0",
     "@cornerstonejs/nifti-volume-loader": "^2.4.0",
     "@cornerstonejs/tools": "^2.4.0",
+    "@mui/icons-material": "^7.0.2",
+    "@mui/material": "^7.0.2",
     "@reduxjs/toolkit": "^2.6.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
