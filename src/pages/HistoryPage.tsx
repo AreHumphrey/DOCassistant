@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import arrowDown from '@/images/arrow_down.svg';
 import arrowUp from '@/images/arrow_up.svg';
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface SavedPrompt {
   id: number;
@@ -21,44 +22,7 @@ interface SavedPrompt {
 
 type SortKey = 'id' | 'full_name' | 'age' | 'created_at' | 'purpose';
 
-const fakeData: SavedPrompt[] = [
-  {
-    id: 1,
-    prompt_name: '',
-    prompt: '',
-    purpose: '',
-    gpt_answer: '',
-    filenames: [],
-    thread_id: '',
-    created_at: '',
-    full_name: 'Иванов Иван Иванович',
-    age: 45,
-  },
-  {
-    id: 2,
-    prompt_name: '',
-    prompt: '',
-    purpose: '',
-    gpt_answer: '',
-    filenames: [],
-    thread_id: '',
-    created_at: '',
-    full_name: 'Петрова Анна Сергеевна',
-    age: 32,
-  },
-  {
-    id: 3,
-    prompt_name: '',
-    prompt: '',
-    purpose: '',
-    gpt_answer: '',
-    filenames: [],
-    thread_id: '',
-    created_at: '',
-    full_name: 'Сидоров Николай Павлович',
-    age: 60,
-  },
-];
+
 
 export default function HistoryPage() {
   const [prompts, setPrompts] = useState<SavedPrompt[]>([]);
@@ -151,6 +115,13 @@ export default function HistoryPage() {
   return (
     <div className="flex flex-col min-h-screen w-full bg-white overflow-x-hidden">
       <Header />
+
+      
+      <Breadcrumbs
+        items={[
+          { label: "Все пациенты" } 
+        ]}
+      />
 
       <main className="flex-grow w-full px-8 py-10">
 

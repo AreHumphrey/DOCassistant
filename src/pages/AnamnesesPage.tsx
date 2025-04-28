@@ -35,6 +35,16 @@ export default function AnamnesesPage() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+
+  useEffect(() => {
+    const ai = localStorage.getItem("ai");
+    const uid = localStorage.getItem("uid");
+
+    if (ai === "ans" && uid) {
+      navigate(`/ai/ans?uid=${uid}`);
+    }
+  }, [navigate]);
+  
   useEffect(() => {
     if (anamnesState) {
       const fioParts = (anamnesState.fio || '').split(" ");
@@ -44,8 +54,23 @@ export default function AnamnesesPage() {
       setBirthday(anamnesState.birthday || "");
       setScanDate(anamnesState.scan_date || "");
       setAnamnes(anamnesState.anamnes || "");
+  
+      // Перенаправление если карточка пустая
+      if (
+        !anamnesState.fio &&
+        !anamnesState.birthday &&
+        !anamnesState.scan_date &&
+        !anamnesState.anamnes
+      ) {
+        const uid = anamnesState.uid;
+        if (uid) {
+          navigate(`/ai/ans?uid=${uid}`);
+        }
+      }
     }
-  }, [anamnesState]);
+  }, [anamnesState, navigate]);
+  
+  
 
   const isValidDate = (dateStr: string, allowToday = false) => {
     const date = new Date(dateStr);

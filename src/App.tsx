@@ -17,6 +17,9 @@ import HelpPage from './pages/HelpPage'
 import PatientsPage from './pages/PatientsPage'
 import CarPage from './pages/CarPage'
 import RadPage from './pages/RadPage'
+import AskNowPage from "@/pages/AskNowPage";
+
+
 
 
 function App() {
@@ -30,7 +33,7 @@ function App() {
           <Route path="/files" element={<FilesPage />} />
           <Route path="/saved-prompts" element={<SavedPromptPage />} />
 
-
+          <Route path="/ai/ans" element={<AskNowPage />} />
           <Route path="/ai/rad" element={<RadPage/>} />
           <Route path="/ai/car" element={<CarPage/>} />
 
