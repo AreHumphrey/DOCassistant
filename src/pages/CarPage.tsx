@@ -8,6 +8,7 @@ import AnswerWindow from "@/components/AnswerWindow";
 import FeedbackWindow from "@/components/FeedbackWindow";
 import FileItem from "@/components/FileManager/FileItem";
 import AnamnesUpload from "@/components/FileManager/AnamnesUpload";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { generateAssistant, continueAssistant } from "@/stores/aiSlice"
@@ -94,6 +95,16 @@ export default function CarPage() {
   return (
     <div>
       <Header />
+
+      <Breadcrumbs
+        items={[
+          { label: "ЭКГ", path: "/ai/car" },
+          { label: "Карта пациента", path: "/med" },
+          { label: "Выбор файлов", path: "/files" },
+          { label: "Создание запроса" }
+        ]}
+      />
+      
       <div className="flex flex-col gap-4 py-8 px-0">
         {/* Карточка пациента и загрузка файлов */}
         <div className="flex flex-row justify-around px-6">

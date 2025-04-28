@@ -10,6 +10,9 @@ import FileItem from "@/components/FileManager/FileItem";
 import Footer from '@/components/Footer';
 import AnamnesUpload from "@/components/FileManager/AnamnesUpload";
 
+
+import Breadcrumbs from "@/components/Breadcrumbs";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { generateAssistant, continueAssistant } from "@/stores/aiSlice";
 import { AppDispatch, RootState } from "@/stores/store";
@@ -21,6 +24,13 @@ export default function LabPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { requireAuth } = useAuth();
+
+  const breadcrumbs = [
+    { label: "Расшифровка лаб. анализов", path: "/ai/lab" },
+    { label: "Карта пациента", path: "/med" },
+    { label: "Выбор файлов", path: "/files" },
+    { label: "Создание запроса" }
+  ];
 
   const { files } = useSelector((state: RootState) => state.files);
   const { prompt, thread_id, answer, saved_prompt_id } = useSelector((state: RootState) => state.ai);
@@ -94,6 +104,10 @@ export default function LabPage() {
   return (
     <div>
       <Header />
+
+
+      <Breadcrumbs items={breadcrumbs} />
+      
       <div className="flex flex-col gap-4 py-8 px-0">
         <div className="flex flex-row justify-around px-6">
           <AnamnesProfile />

@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/stores/store";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { AppDispatch } from "@/stores/store";
 
 import { fetchAnamneseByUid } from "@/stores/savedPromptSlice";
@@ -48,12 +49,29 @@ export default function DrugPage() {
     }
   };
 
+
+  
+
   return (
     <div>
       <Header />
 
+      <div className="w-full max-w-7xl mx-auto px-6 mt-10">
+        <Breadcrumbs
+          items={[
+            { label: "Совместимость лекарств", path: "/ai/far" },
+            { label: "Карта пациента", path: "/med" },
+            { label: "Создание запроса" }
+          ]}
+        />
+      </div>
+
+
       <main className="w-full flex flex-col items-center justify-center gap-8 px-2 sm:px-4 py-6">
         <AnamnesProfile />
+
+
+
 
         {showAnswer && answer && (
           <AnswerWindow uid={uid ?? ""} pid={null} />

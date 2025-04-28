@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import Breadcrumbs from "@/components/Breadcrumbs";
+
 
 import { RootState, AppDispatch } from "@/stores/store";
 import { addAnamnes, getAnamnesFromFile } from "@/stores/anamnesSlice";
@@ -176,6 +178,30 @@ export default function AnamnesesPage() {
     setShowCard(false);
   };
 
+  const getBreadcrumbs = () => {
+    const ai = localStorage.getItem("ai");
+  
+    const directions: Record<string, { label: string; path: string }> = {
+      lab: { label: "Расшифровка лаб. анализов", path: "/ai/lab" },
+      rad: { label: "Лучевая диагностика", path: "/ai/rad" },
+      far: { label: "Совместимость лекарств", path: "/ai/far" },
+      car: { label: "ЭКГ", path: "/ai/car" },
+      ans: { label: "Спроси сейчас", path: "/ai/ans" },
+    };
+  
+    const currentDirection = directions[ai || ""];
+  
+    if (!currentDirection) {
+      return [{ label: "Создание карты пациента" }];
+    }
+  
+    return [
+      { label: currentDirection.label, path: currentDirection.path },
+      { label: "Создание карты пациента" },
+    ];
+  };
+  
+
   const handleNext = () => {
     navigate("/files");
   };
@@ -184,6 +210,8 @@ export default function AnamnesesPage() {
   return (
     <div className="min-h-screen w-screen overflow-x-hidden flex flex-col bg-white">
       <Header />
+
+      <Breadcrumbs items={getBreadcrumbs()} />
 
       <main className="flex flex-col items-center justify-center flex-grow px-4 py-10">
         {/* Синий SVG блок */}

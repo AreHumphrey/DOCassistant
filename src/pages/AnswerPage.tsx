@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { Ananmnes } from "@/types/Anamnes";
 import { FileData } from "@/types/File";
 import { useNavigate } from "react-router-dom";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default function AnswerPage() {
     const navigate = useNavigate()
@@ -12,11 +13,19 @@ export default function AnswerPage() {
     const buf_anamnes = localStorage.getItem("anamnes")
     const anamnes: Ananmnes | null = buf_anamnes ? JSON.parse(buf_anamnes) : null
     const files: FileData[] = JSON.parse(localStorage.getItem("selectedFiles")!)
+
+    const breadcrumbs = [
+        { label: "Спроси сейчас", path: "/ai/ans" },
+        { label: "Создание запроса" }
+      ];
     
 
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
+
+            <Breadcrumbs items={breadcrumbs} />
+            
             <div className="flex flex-col flex-grow justify-center items-center">
                 <div className="flex flex-row gap-10">
                     <div className="w-3/6">

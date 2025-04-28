@@ -11,6 +11,9 @@ import AnamnesProfile from "@/components/Anamnes/AnamnesProfile";
 import FileItem from "@/components/FileManager/FileItem";
 import SavedPromptsWindow from "@/components/SavedPromptsWindow";
 import AnswerWindow from "@/components/AnswerWindow";
+
+
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Header from "@/components/Header";
 
 export default function SavedPromptPage() {

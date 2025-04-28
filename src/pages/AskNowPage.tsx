@@ -11,6 +11,7 @@ import FeedbackWindow from "@/components/FeedbackWindow";
 import { useAuth } from "@/contexts/AuthContext";
 import { generateAssistant, continueAssistant } from "@/stores/aiSlice";
 import { RootState, AppDispatch } from "@/stores/store";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default function AskNowPage() {
   const purpose = "ASK_NOW"; // Используем ASK_NOW

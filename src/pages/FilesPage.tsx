@@ -18,6 +18,7 @@ import PdfIcon from '@/images/icon__pdf.svg';
 import DocIcon from '@/images/icon__doc.svg';
 import TxtIcon from '@/images/icon__txt.svg';
 import XlsIcon from '@/images/icon__xls.svg';
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default function FilesPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -59,7 +60,31 @@ export default function FilesPage() {
       navigate(`/ai/${ai}?uid=${uid}`);
     }
   }, []);
-
+  const getBreadcrumbs = () => {
+    const ai = localStorage.getItem("ai"); // lab, rad, far, car, ans
+  
+    const directions: Record<string, { label: string; path: string }> = {
+      lab: { label: "Расшифровка лаб. анализов", path: "/ai/lab" },
+      rad: { label: "Лучевая диагностика", path: "/ai/rad" },
+      far: { label: "Совместимость лекарств", path: "/ai/far" },
+      car: { label: "ЭКГ", path: "/ai/car" },
+      ans: { label: "Спроси сейчас", path: "/ai/ans" },
+    };
+  
+    const currentDirection = directions[ai || ""];
+  
+    if (!currentDirection) {
+      return [{ label: "Выбор файлов" }];
+    }
+  
+    return [
+      { label: currentDirection.label, path: currentDirection.path },
+      { label: "Создание карты пациента", path: "/med" }, // Промежуточная страница
+      { label: "Выбор файлов" }, // Текущая страница (без path)
+    ];
+  };
+  
+  
   const handleContinue = () => {
     const selectedFiles = files.filter((file) => file.isSelected);
     localStorage.setItem("selectedFiles", JSON.stringify(selectedFiles));
@@ -133,6 +158,11 @@ export default function FilesPage() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden flex flex-col bg-white">
       <Header />
+
+      <Breadcrumbs
+        items={getBreadcrumbs()}
+      />
+
 
       <main className="flex flex-col items-center justify-center flex-grow px-2 sm:px-4 py-10">
         {anamnes && (

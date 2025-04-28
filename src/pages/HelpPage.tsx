@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+import Breadcrumbs from "@/components/Breadcrumbs";
+
 export default function HelpPage() {
   return (
     <div className="min-h-screen w-screen overflow-x-hidden flex flex-col bg-white text-black">

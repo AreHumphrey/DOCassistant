@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import arrowDown from '@/images/arrow_down.svg';
 import arrowUp from '@/images/arrow_up.svg';
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 interface Anamnes {
   fio: string;
@@ -86,6 +87,12 @@ export default function PatientsPage() {
   return (
     <div className="flex flex-col min-h-screen w-full bg-white overflow-x-hidden">
       <Header />
+
+      <Breadcrumbs
+              items={[
+                { label: "Все пациенты" } 
+              ]}
+       />
 
       <main className="flex-grow w-full px-8 py-10">
       <h1 className="text-[60px] font-semibold mb-10 text-black text-left tracking-wider sm:tracking-widest font-semibold mb-10 text-black text-left uppercase">
