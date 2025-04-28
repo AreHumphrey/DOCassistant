@@ -29,6 +29,14 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
   };
 
   return (
+
+
+
+
+
+
+    
+
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative bg-white rounded-2xl shadow-2xl p-10 w-[95%] max-w-[900px] max-h-[90vh] overflow-auto">
         
