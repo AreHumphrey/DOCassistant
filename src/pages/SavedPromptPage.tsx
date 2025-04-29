@@ -5,30 +5,25 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/stores/store";
 import { fetchAnamneseByUid, fetchSavedPromptsByUid } from "@/stores/savedPromptSlice";
-import { setAnswer } from "@/stores/aiSlice"
-import { fetchFileByName, resetFiles } from "@/stores/filesSlice"; // Импорт нового действия для получения файла
+import { setAnswer } from "@/stores/aiSlice";
+import { fetchFileByName, resetFiles } from "@/stores/filesSlice";
+
 import AnamnesProfile from "@/components/Anamnes/AnamnesProfile";
 import FileItem from "@/components/FileManager/FileItem";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import SavedPromptsWindow from "@/components/SavedPromptsWindow";
 import AnswerWindow from "@/components/AnswerWindow";
-
-
-import Breadcrumbs from "@/components/Breadcrumbs";
 import Header from "@/components/Header";
 
 export default function SavedPromptPage() {
   const [searchParams] = useSearchParams();
-  const uid = searchParams.get("uid"); // Извлекаем параметр "uid"
-
-  const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null); // Для отслеживания выбранного промпта
+  const uid = searchParams.get("uid");
+  const [selectedPrompt, setSelectedPrompt] = useState<number | null>(null);
 
   const { requireAuth } = useAuth();
-
   const dispatch = useDispatch<AppDispatch>();
-  const { anamnes, savedPromptsList, loading } = useSelector(
-    (state: RootState) => state.savedPrompts
-  );
-  const { files } = useSelector((state: RootState) => state.files); // Все файлы из Redux состояния
+  const { anamnes, savedPromptsList, loading } = useSelector((state: RootState) => state.savedPrompts);
+  const { files } = useSelector((state: RootState) => state.files);
 
   useEffect(() => {
     requireAuth();
@@ -41,51 +36,57 @@ export default function SavedPromptPage() {
     }
   }, [uid]);
 
+  
+
+
   useEffect(() => {
-    dispatch(resetFiles())
+    dispatch(resetFiles());
     if (selectedPrompt !== null) {
-      const filenames = savedPromptsList[selectedPrompt].filenames
-      if (filenames && filenames.length > 0) {
-        filenames.map((filename) => {
+      const filenames = savedPromptsList[selectedPrompt]?.filenames || [];
+      if (filenames.length > 0) {
+        filenames.forEach((filename) => {
           if (filename && !files.some((file) => file.servername === filename)) {
             dispatch(fetchFileByName(filename));
           }
-        })
+        });
+      } else {
+        dispatch(setAnswer(""));
       }
-      else {
-        dispatch(setAnswer(""))
-      }
-      dispatch(setAnswer(savedPromptsList[selectedPrompt].gpt_answer))
+      dispatch(setAnswer(savedPromptsList[selectedPrompt]?.gpt_answer || ""));
     }
-  }, [selectedPrompt, dispatch]);
+  }, [selectedPrompt, dispatch, savedPromptsList, files]);
 
   return (
     <>
-    <Header />
-    <div className="p-8">
-      {!loading && anamnes && (
-        <div className="flex flex-row gap-20">
-          <AnamnesProfile />
-          <div className="max-w-screen-sm flex flex-col gap-7">
-            <SavedPromptsWindow savedPromptsList={savedPromptsList} setSelectedPrompt={setSelectedPrompt}/>
-            <AnswerWindow
-            uid={uid !== null ? uid : ""}
-            pid={selectedPrompt !== null ? savedPromptsList[selectedPrompt].id : null}/>
-          </div>
-          <div className="flex flex-col gap-1">
-            {/* Отображаем первый файл из первого промпта */}
-            {files.length > 0 && files.map((file, index) => (
-              <FileItem
-                key={index}
-                file={file}
+      <Header />
+      
+      <div className="px-8 py-6 bg-gray-50 min-h-screen">
+        {!loading && anamnes && (
+          <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr_320px] gap-8">
+            <div>
+              <AnamnesProfile />
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <SavedPromptsWindow savedPromptsList={savedPromptsList} setSelectedPrompt={setSelectedPrompt} />
+              <AnswerWindow
+                uid={uid !== null ? uid : ""}
+                pid={selectedPrompt !== null ? savedPromptsList[selectedPrompt].id : null}
               />
-            )
-            )}
-            {files.length === 0 && <p>Файл не найден или загружается...</p>}
+            </div>
+
+            <div className="flex flex-col gap-4">
+              {files.length > 0 ? (
+                files.map((file, index) => (
+                  <FileItem key={index} file={file} />
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm">Файлы не найдены или загружаются...</p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </>
   );
 }

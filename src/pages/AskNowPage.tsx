@@ -25,6 +25,11 @@ export default function AskNowPage() {
 
   const uidFromUrl = searchParams.get("uid") ?? "";
 
+  const breadcrumbs = [
+    { label: "Спроси сейчас", path: "/ai/ans" },
+    { label: "Создание запроса" }
+  ];
+
   useEffect(() => {
     requireAuth();
   }, [requireAuth]);
@@ -41,8 +46,7 @@ export default function AskNowPage() {
       } else {
         await dispatch(continueAssistant({ uid: "", filenames: [], prompt, purpose, thread_id }));
       }
-      // ВАЖНО: больше НЕ скрываем PromptWindow!
-      // setShowPrompt(false); — УДАЛЕНО
+
     } catch (error) {
       console.error("Ошибка при отправке запроса:", error);
       alert("Произошла ошибка на сервере. Пожалуйста, попробуйте позже.");
@@ -52,6 +56,9 @@ export default function AskNowPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+
+      <Breadcrumbs items={breadcrumbs} />
+     
 
       <main className="flex flex-col items-center justify-start gap-8 py-8">
         <h1 className="text-3xl font-bold text-gray-800">Задайте ваш вопрос ИИ</h1>
@@ -71,7 +78,7 @@ export default function AskNowPage() {
 
           </div>
         )}
-        {/* Всегда показываем PromptWindow */}
+        {}
         <>
           <PromptWindow />
           <div className="w-full flex justify-center">

@@ -107,7 +107,7 @@ export default function LabPage() {
 
 
       <Breadcrumbs items={breadcrumbs} />
-      
+
       <div className="flex flex-col gap-4 py-8 px-0">
         <div className="flex flex-row justify-around px-6">
           <AnamnesProfile />
@@ -188,7 +188,7 @@ export default function LabPage() {
         )}
 
 
-        {/* <div className="w-full flex justify-start px-10">
+        <div className="w-full flex justify-start px-10">
             <button
               onClick={handleContinue}
               className="w-36 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
@@ -196,7 +196,7 @@ export default function LabPage() {
               Далее
             </button>
 
-      </div> */}
+      </div>
       </div>
 
       <FeedbackWindow

@@ -153,16 +153,15 @@ export default function RadPage() {
 
         {/* Кнопка Далее */}
         {/* Отключена, но оставлена на будущее */}
-        {/* 
         <div className="w-full flex justify-start px-10">
-          <button
-            onClick={handleContinue}
-            className="w-36 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
-          >
-            Далее
-          </button>
-        </div>
-        */}
+            <button
+              onClick={handleContinue}
+              className="w-36 mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Далее
+            </button>
+
+      </div>
       </div>
 
       <FeedbackWindow

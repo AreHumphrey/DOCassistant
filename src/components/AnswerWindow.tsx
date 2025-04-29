@@ -79,24 +79,7 @@ export default function AnswerWindow({ uid, pid }: AnswerWindowProps) {
         >
           Копировать
         </button>
-        <button
-          onClick={printPDF}
-          disabled={loading}
-          className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
-            transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
-            focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
-        >
-          Печать
-        </button>
-        <button
-          onClick={generatePDF}
-          disabled={loading}
-          className="px-5 py-2 bg-[#A4C1FF] text-white rounded-full font-semibold 
-            transition hover:ring-2 hover:ring-[#0A57FF] hover:bg-[#0A57FF]  focus:bg-[#0A57FF]
-            focus:ring-2 focus:ring-[#0A57FF] focus:outline-none"
-        >
-          PDF
-        </button>
+
       </div>
 
       {loading ? (

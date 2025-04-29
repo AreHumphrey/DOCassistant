@@ -95,6 +95,9 @@ export default function DrugPage() {
             Оставить отзыв
           </button>
         </div>
+
+
+        
       </main>
 
       <FeedbackWindow
@@ -102,6 +105,8 @@ export default function DrugPage() {
         onClose={() => setFeedbackOpen(false)}
         purpose={purpose}
       />
+
+
 
     <Footer />
       
