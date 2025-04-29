@@ -104,15 +104,15 @@ export default function CarPage() {
           { label: "Создание запроса" }
         ]}
       />
-      
+
       <div className="flex flex-col gap-4 py-8 px-0">
-        {/* Карточка пациента и загрузка файлов */}
+        {}
         <div className="flex flex-row justify-around px-6">
           <AnamnesProfile />
           <AnamnesUpload />
         </div>
 
-        {/* Ответ ИИ */}
+        {}
         {answer && (
           <div className="w-full">
             <AnswerWindow uid={anamnes?.uid ?? ""} pid={saved_prompt_id} />
@@ -127,7 +127,7 @@ export default function CarPage() {
           </div>
         )}
 
-        {/* Загруженные файлы */}
+        {}
         <div className="w-full px-10">
           <h2 className="text-2xl font-semibold text-gray-800 mt-4 mb-2">Загруженные снимки:</h2>
           <div className="bg-gray-100 rounded-2xl p-4">
@@ -186,7 +186,7 @@ export default function CarPage() {
           </>
         )}
 
-        {/* Кнопка Далее */}
+        {}
         <div className="w-full flex justify-start px-10">
           <button
             onClick={handleContinue}

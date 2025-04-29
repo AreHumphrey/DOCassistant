@@ -132,12 +132,16 @@ const Header: React.FC = () => {
                 alt="Тех помощь"
                 className="w-[150px] h-auto"
               />
+
             </div>
           </div>
         </div>
       </header>
 
-      {/* Модальное окно отдельно от хедера, чтобы было поверх всего */}
+
+
+
+      {}
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </>
   );
