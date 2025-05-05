@@ -35,11 +35,21 @@ const Saver = ({ divRef, needsave }) => {
 
         const canvas = enabledElement.canvas
 
+        console.log(canvas)
+
         // @ts-ignore
         canvas.toBlob((blob) => {
+            console.log(blob)
             if (blob) {
-                const imageUrl = URL.createObjectURL(blob)
-                dispatch(setSavedImageUrl(imageUrl)) // Сохраняем ссылку на изображение в Redux
+                const url = URL.createObjectURL(blob)
+                const link = document.createElement('a')
+                link.href = url
+                link.download = 'cornerstone-image.png' // Имя файла при скачивании
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                
+                dispatch(setSavedImageUrl(url)) // Сохраняем ссылку на изображение в Redux
             } else {
                 console.error("Failed to create Blob from canvas.")
             }

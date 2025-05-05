@@ -101,15 +101,42 @@ export default function FilesPage() {
     navigate(`/ai/${ai}?uid=${uid}`);
   };
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const imagesToEdit: { dcm_url: string[]; png_url: string }[] = [];
+  const getDicomJPG = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await axios.post<{ url: string }>('/api/dicom/get-image',
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // если нужна авторизация
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data.url; // <-- это и есть ссылка на JPG
+    } catch (error) {
+      console.error("Ошибка при конвертации DICOM:", error);
+      throw error;
+    }
+  };
 
-      acceptedFiles.forEach((file) => {
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const imagesToEdit: { dcm_url: string[]; png_url: string }[] = [];
+  
+      for (const file of acceptedFiles) {
         if (file.name.endsWith(".dcm") || file.name.endsWith(".zip")) {
           const fileUrl = URL.createObjectURL(file);
-          const previewUrl = "https://placehold.jp/128x128.png";
-          imagesToEdit.push({ dcm_url: [fileUrl], png_url: previewUrl });
+  
+          try {
+            const previewUrl = await getDicomJPG(file); // <-- await здесь
+            imagesToEdit.push({ dcm_url: [fileUrl], png_url: previewUrl });
+          } catch (error) {
+            console.error("Ошибка при обработке DICOM файла:", error);
+          }
         } else {
           dispatch(uploadFile(file))
             .unwrap()
@@ -118,8 +145,8 @@ export default function FilesPage() {
             })
             .catch((err) => console.error("Ошибка загрузки файла:", err));
         }
-      });
-
+      }
+  
       if (imagesToEdit.length > 0) {
         setEditorImages(imagesToEdit);
         setIsModalOpen(true);
@@ -229,11 +256,12 @@ export default function FilesPage() {
       </main>
 
       {isModalOpen && (
-        <div className="w-screen h-screen fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="w-full h-full bg-white relative">
+        <div className="w-screen h-screen fixed inset-0 z-50 bg-opacity-50 flex items-center justify-center">
+          <div className="w-full h-full relative bg-gray-my-2">
             <button
               onClick={closeModal}
-              className="absolute top-2 right-2 text-red-500 font-bold text-xl hover:text-red-700"
+              style={{right: "25rem"}}
+              className="absolute top-2 text-white font-bold text-x z-50 bg-blue-700 rounded-3xl"
             >
               Сохранить
             </button>
