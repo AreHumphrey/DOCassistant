@@ -61,10 +61,6 @@ export default function MenuPage() {
     }
   };
 
-  const frameSizeClass = isMobile ? 'w-[520px] h-[520px]' : 'w-[500px] h-[500px]';
-  const cardClasses = `relative p-2 cursor-pointer transition duration-200 group ${isMobile ? 'w-full max-w-[320px] mx-auto' : ''}`;
-  const contentClass = `absolute top-0 left-0 w-full h-full z-10 flex flex-col items-center justify-center text-center`;
-
   const cards = [
     { icon: LabIcon, label: 'РАСШИФРОВКА\nЛАБ АНАЛИЗОВ', sector: 1 },
     { icon: RadIcon, label: 'ЛУЧЕВАЯ\nДИАГНОСТИКА', sector: 2 },
@@ -74,30 +70,26 @@ export default function MenuPage() {
   ];
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-white overflow-x-hidden">
+    <div className="min-h-screen w-screen flex flex-col bg-white overflow-x-hidden">
       <Header />
 
-      {/* Карточки направлений */}
-      <div className={`mt-5 flex-grow grid grid-cols-1 sm:grid-cols-1 md:grid-cols-5 gap-2 px-4 md:px-26 pb-24 ${isMobile ? 'py-10 gap-y-6 mt-8' : ''}`}>
+      <div className="mt-10 mb-5 flex flex-wrap justify-center gap-6 px-4 pb-24">
         {cards.map(({ icon, label, sector }, index) => (
           <div
             key={index}
-            className={cardClasses}
             onClick={(e) => handleButtonClick(e, sector)}
-            style={{ height: isMobile ? '520px' : '500px' }}
+            className="relative cursor-pointer transition duration-200 group"
+            style={{ width: 280, height: 400 }}
           >
-            <img src={BorderFrame} alt="Рамка" className={`absolute inset-0 block group-hover:hidden ${frameSizeClass}`} />
-            <img src={BorderFrameHover} alt="Рамка (розовая)" className={`absolute inset-0 hidden group-hover:block ${frameSizeClass}`} />
-            <div className={contentClass}>
-              <img src={icon} alt="Иконка" className="w-32 h-32 sm:w-40 sm:h-40 mb-6" />
-              <span className="text-black text-lg sm:text-xl font-bold leading-tight whitespace-pre-line">
-                {label}
-              </span>
+            <img src={BorderFrame} alt="Рамка" className="absolute inset-0 w-full h-full group-hover:hidden" />
+            <img src={BorderFrameHover} alt="Рамка (hover)" className="absolute inset-0 w-full h-full hidden group-hover:block" />
+            <div className="absolute top-0 left-0 w-full h-full z-10 flex flex-col items-center justify-center text-center px-4">
+            <img src={icon} alt="Иконка" className="max-w-[150px] h-auto mb-6 object-contain" />
+              <span className="text-black text-base font-bold leading-tight whitespace-pre-line">{label}</span>
             </div>
           </div>
         ))}
       </div>
-
       <Footer />
     </div>
   );

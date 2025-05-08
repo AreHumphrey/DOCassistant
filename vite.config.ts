@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
     open: true, // Автоматическое открытие браузера
+    allowedHosts: ['.loca.lt'],
     proxy: {
       // Проксируем запросы с /api на бэкенд
       '/api': {

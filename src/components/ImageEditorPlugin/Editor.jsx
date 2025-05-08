@@ -149,15 +149,17 @@ const EditorWindow = ({ imagePath, needsave }) => {
 
     return (
         <div
-            className="Editor"
-            style={{ display: "flex", flexDirection: "row" }}
+            className="flex flex-row w-full h-full"
             onWheel={handleWheel} // Добавляем обработчик колесика мыши
         >
-            <div style={{ flex: 1 }}>
-                <p>Изображений в серии: {imagePath.length}</p>
+            <div className="mr-20">
+                <ToolBox patientInfo={patientInfo} divRef={divRef} imageIds={imagesIds} currentImageIndex={currentImageIndex} key={currentImageIndex + imagesIds} onReset={handleReset} />
+                <Saver divRef={divRef} needsave={needsave} />
+            </div>
+            <div className="w-7/12 flex justify-center place-items-center">
                 <ImageViewer divRef={divRef} cvsRef={cvsRef} />
             </div>
-            <div style={{ transform: 'rotate(90deg)' }}>
+            <div style={{ transform: 'rotate(90deg)', display: "none" }}>
                 <input
                     type="range"
                     min="0"
@@ -171,11 +173,6 @@ const EditorWindow = ({ imagePath, needsave }) => {
                         borderRadius: "5px", // Скругляем края
                     }}
                 />
-            </div>
-
-            <div style={{ marginLeft: "10px" }}>
-                <ToolBox patientInfo={patientInfo} divRef={divRef} imageIds={imagesIds} currentImageIndex={currentImageIndex} key={currentImageIndex + imagesIds} onReset={handleReset} />
-                <Saver divRef={divRef} needsave={needsave} />
             </div>
         </div>
     )

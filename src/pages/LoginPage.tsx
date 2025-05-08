@@ -18,30 +18,36 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
-  
+
     try {
       const response = await axios.post('/api/login', {
         email,
         password,
       });
-  
+
       const { access_token } = response.data;
-  
+
+      // Сохраняем токен
       localStorage.setItem('token', access_token);
       localStorage.setItem('token_type', 'Bearer');
-  
-      // Получаем профиль, чтобы извлечь uid
-      const profileResponse = await axios.get('/api/profile', {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
-  
-      const uid = profileResponse.data.id;
-      localStorage.setItem('uid', uid.toString());
-  
+
+      // Пытаемся получить профиль
+      try {
+        const profileResponse = await axios.get('/api/profile', {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        });
+
+        const uid = profileResponse.data?.id;
+        if (uid) {
+          localStorage.setItem('uid', uid.toString());
+        }
+      } catch (profileErr) {
+        console.warn('Не удалось получить профиль:', profileErr);
+      }
+
       login(access_token);
-      alert('Успешный вход!');
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Ошибка при входе. Проверьте данные.');
@@ -49,7 +55,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-  
 
 
   return (
@@ -80,7 +85,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-10 -translate-y-[10%]">
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2 text-xl font-medium text-white">
-              Eмейл:
+              Почта:
             </label>
             <input
               id="email"
@@ -146,5 +151,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-

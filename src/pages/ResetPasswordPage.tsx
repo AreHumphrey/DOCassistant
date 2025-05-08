@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
         <form onSubmit={handleSubmit} className="space-y-10 -translate-y-[10%]">
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2 text-xl font-medium text-white">
-              Введите ваш e-mail:
+              Введите вашу почту:
             </label>
             <input
               id="email"
